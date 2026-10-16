@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>커리어 길잡이</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
 <style>
 /* 공통 style.css가 생기면 아래 색 변수는 그쪽으로 옮겨요 */
 :root {
@@ -29,6 +32,11 @@
   --po: #EDE6FA;
   --mkt: #FBE6EC;
   --tape: rgba(255, 255, 255, .55);
+  /* 낡은 종이 질감: 결(grain) · 얼룩(blotch) · 바랜 잉크 마스크(ink) · 가장자리 바램(age) */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .28 0 0 0 0 .16 .2 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
+  --blotch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .4 0 0 0 0 .15 .42 0 0 0 -.19'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23b%29'/%3E%3C/svg%3E");
+  --ink-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.15'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23m%29'/%3E%3C/svg%3E");
+  --age-edge: inset 0 0 22px rgba(140, 100, 30, .16);
   /* 종이 그림자 3단계: 바닥에 놓인 종이 · 겹친 종이 · 들린 종이 */
   --shadow-1: 0 1px 2px rgba(20, 33, 61, .08);
   --shadow-2: 0 1px 2px rgba(20, 33, 61, .06), 0 4px 10px rgba(20, 33, 61, .08);
@@ -37,9 +45,10 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--paper) url("assets/home/paper.webp") repeat;
+  background-size: 512px 512px;
   color: var(--ink);
-  font: 16px/1.6 "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  font: 16px/1.6 "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   word-break: keep-all;
 }
 a { color: inherit; }
@@ -63,8 +72,8 @@ a { color: inherit; }
 .tabs a[aria-current="page"]::after { inset: -6px -11px 4px 14px; z-index: -2; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
 
 /* 히어로: 지도 위에 길을 그려 나가요 */
-.hero { margin: 0 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow-2); overflow: hidden;
-  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 22px 22px; }
+.hero { margin: 0 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); overflow: hidden;
+  background-image: var(--blotch), var(--grain), linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 420px 420px, 180px 180px, 22px 22px, 22px 22px; }
 .hero-text { padding: 36px 40px 0; }
 .hero h1 { margin: 0; font-size: clamp(30px, 4.6vw, 48px); line-height: 1.2; letter-spacing: -1.5px; }
 .hero p { margin: 10px 0 20px; color: var(--ink-2); font-size: 17px; }
@@ -74,10 +83,13 @@ a { color: inherit; }
 .map { position: relative; aspect-ratio: 1600 / 426; margin-top: 12px; }
 .map > img { position: absolute; }
 .map > img:not(.deco) { inset: 0; width: 100%; height: 100%; }
+/* 지도 그림 위에도 같은 얼룩·결을 덮어 윗부분 종이와 맞춰요 */
+.map::after { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--blotch), var(--grain); background-size: 420px 420px, 180px 180px; mix-blend-mode: multiply; pointer-events: none; }
+.map > img:not(:first-child), .map .stamp, .map .pins li, .map .note { z-index: 1; }
 .pencil { width: 11%; right: 0; top: 0; }
 .flag { width: 12.5%; left: 79%; top: 4%; }
 .compass { width: 9%; right: 3%; bottom: 6%; }
-.stamp { position: absolute; left: 4%; top: 72%; transform: rotate(-8deg); padding: 4px 14px; border: 2px solid var(--red); border-radius: 50%; color: var(--red); font-weight: 800; font-size: clamp(11px, 1.5vw, 18px); white-space: nowrap; }
+.stamp { position: absolute; left: 4%; top: 72%; transform: rotate(-8deg); padding: 4px 14px; border: 2px solid var(--red); border-radius: 50%; color: var(--red); font-weight: 700; font-size: clamp(11px, 1.5vw, 18px); white-space: nowrap; opacity: .9; -webkit-mask: var(--ink-mask); mask: var(--ink-mask); }
 .pins { list-style: none; margin: 0; padding: 0; }
 .pins li { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; }
 .pins svg { width: clamp(16px, 2.2vw, 28px); height: auto; }
@@ -97,39 +109,43 @@ a { color: inherit; }
 /* 직군 폴더 */
 .folders { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
 .folder { position: relative; padding-top: 24px; margin-top: 14px; isolation: isolate; }
-.folder::before { content: ""; position: absolute; inset: 0 0 6px; z-index: -2; background: var(--folder-back); border-radius: 0 8px 8px 8px; box-shadow: var(--shadow-1); }
-.folder::after { content: ""; position: absolute; left: 0; top: -13px; z-index: -2; width: 40%; height: 14px; background: var(--folder-back); border-radius: 8px 8px 0 0; }
-.folder .paper { position: absolute; left: 7%; right: 9%; top: 6px; height: 60%; z-index: -1; background: var(--white); border-radius: 3px; box-shadow: var(--shadow-1); transform: rotate(-1.2deg); transition: transform .2s; }
+.folder::before { content: ""; position: absolute; inset: 0 0 6px; z-index: -2; background: var(--grain), var(--folder-back); border-radius: 0 8px 8px 8px; box-shadow: var(--age-edge), var(--shadow-1); filter: url(#worn); }
+.folder::after { content: ""; position: absolute; left: 0; top: -13px; z-index: -2; width: 40%; height: 14px; background: var(--grain), var(--folder-back); border-radius: 8px 8px 0 0; filter: url(#worn); }
+.folder .paper { position: absolute; left: 7%; right: 9%; top: 6px; height: 60%; z-index: -1; background: var(--grain), #FDFBF5; border-radius: 3px; box-shadow: inset 0 0 10px rgba(140, 100, 30, .12), var(--shadow-1); transform: rotate(-1.2deg); transition: transform .2s; }
 .folder .paper::before { content: ""; position: absolute; left: 12px; right: 30%; top: 8px; height: 2px; background: var(--line); box-shadow: 0 6px 0 var(--line); }
-.folder .front { position: relative; padding: 18px 20px 14px; background: linear-gradient(var(--folder), var(--folder-deep)); border-radius: 4px 4px 8px 8px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), var(--shadow-2); transition: box-shadow .2s; }
+.folder .front { position: relative; padding: 18px 20px 14px; background: var(--front-stain, linear-gradient(transparent, transparent)), var(--grain), var(--blotch), linear-gradient(var(--folder), var(--folder-deep)); background-size: auto, 180px 180px, 420px 420px, auto; border-radius: 4px 4px 8px 8px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), var(--age-edge), var(--shadow-2); transition: box-shadow .2s; }
+/* 커피 자국은 폴더 두 개에만 */
+.folder:nth-child(2) .front { --front-stain: radial-gradient(circle at 92% 88%, transparent 0 34px, rgba(150, 100, 35, .16) 35px 37px, rgba(150, 100, 35, .05) 38px 52px, transparent 53px); }
+.folder:nth-child(4) .front { --front-stain: radial-gradient(circle at 96% 12%, transparent 0 34px, rgba(150, 100, 35, .16) 35px 37px, rgba(150, 100, 35, .05) 38px 52px, transparent 53px); }
 .folder:hover .paper, .folder:focus-within .paper { transform: translateY(-8px) rotate(-2deg); }
-.folder:hover .front, .folder:focus-within .front { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), var(--shadow-3); }
+.folder:hover .front, .folder:focus-within .front { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), var(--age-edge), var(--shadow-3); }
 .folder h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 19px; }
 .folder h3 .mi { width: 22px; height: 22px; }
-.folder p { margin: 2px 0 12px; font-size: 14px; color: var(--ink-2); }
-.folder a { display: inline-block; padding-top: 10px; border-top: 1px solid rgba(20, 33, 61, .12); width: 100%; font-size: 14px; text-decoration: none; }
+.folder p { margin: 2px 0 12px; font-size: 15px; color: var(--ink-2); }
+.folder a { display: inline-block; padding-top: 10px; border-top: 1px solid rgba(20, 33, 61, .12); width: 100%; font-size: 15px; text-decoration: none; }
 .folder a:hover, .folder a:focus-visible { text-decoration: underline; }
 
 /* 채용 공고 접수증 */
 .tickets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
 .tickets li { filter: drop-shadow(0 1px 1px rgba(20, 33, 61, .08)) drop-shadow(0 4px 8px rgba(20, 33, 61, .08)); transition: transform .2s; }
 .tickets li:hover { transform: translateY(-3px) rotate(-.4deg); }
-.ticket { --tooth: 6px; display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 20px 0 20px 20px; background: var(--white);
+.ticket { --tooth: 6px; display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 20px 0 20px 20px; background: linear-gradient(97deg, transparent 61.5%, rgba(255, 255, 255, .7) 62%, rgba(20, 33, 61, .05) 62.6%, transparent 63.4%), var(--grain), #FEFCF7; box-shadow: inset 0 0 18px rgba(140, 100, 30, .12);
   -webkit-mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x;
           mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x; }
 .ticket .stub { align-self: stretch; display: grid; place-items: center; padding: 0 18px; margin-left: 12px; border-left: 2px dashed var(--line); }
-.ticket .co { font-size: 13px; color: var(--ink-2); }
+.ticket .co { font-size: 14px; color: var(--ink-2); }
 .ticket h3 { margin: 0 0 8px; font-size: 17px; }
-.tag { display: inline-block; padding: 1px 10px; border-radius: 99px; font-size: 13px; }
-.dday { padding: 2px 10px; border: 2px solid var(--red); border-radius: 4px; color: var(--red); font-weight: 800; font-size: 22px; transform: rotate(-6deg); opacity: .88; box-shadow: inset 0 0 0 1px rgba(200, 49, 58, .25); }
+.tag { display: inline-block; padding: 1px 10px; border-radius: 99px; font-size: 14px; }
+.dday { padding: 2px 10px; border: 3px solid var(--red); border-radius: 4px; color: var(--red); font-weight: 700; font-size: 22px; transform: rotate(-6deg); opacity: .9; -webkit-mask: var(--ink-mask); mask: var(--ink-mask); }
 
 /* 자주 묻는 질문 메모지 */
 .notes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-.notes details { position: relative; padding: 20px 20px 16px; background: linear-gradient(170deg, var(--note), #FBE98C); border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px; box-shadow: var(--shadow-1), 6px 12px 10px -9px rgba(20, 33, 61, .28); }
+.notes details { position: relative; padding: 20px 20px 16px; }
+.notes details::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(transparent 80%, rgba(255, 255, 255, .55) 81%, rgba(120, 90, 20, .07) 82%, transparent 83.5%), var(--grain), linear-gradient(170deg, var(--note), #F6E07E); border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px; box-shadow: inset 0 0 16px rgba(150, 110, 20, .16), var(--shadow-1), 6px 12px 10px -9px rgba(20, 33, 61, .28); filter: url(#worn); }
 .notes details::before { content: ""; position: absolute; left: 50%; top: -9px; width: 72px; height: 20px; margin-left: -36px; background: var(--tape); border: 1px solid rgba(255, 255, 255, .7); box-shadow: var(--shadow-1); transform: rotate(-3deg); }
 .notes details:nth-child(1) { transform: rotate(-.6deg); }
 .notes details:nth-child(2) { transform: rotate(.6deg); }
-.notes summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.notes summary { cursor: pointer; font-weight: 500; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
 .notes summary::after { content: "+"; font-size: 20px; line-height: 1; }
 .notes details[open] summary::after { content: "−"; }
 .notes summary::-webkit-details-marker { display: none; }
@@ -167,6 +183,7 @@ a { color: inherit; }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="worn"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="4"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter></svg>
 
 <header class="wrap site-head">
   <a class="logo" href="index.html">
