@@ -41,8 +41,9 @@
   /* 번짐 없는 단색 그림자: 오려 붙인 종이처럼 또렷하게 */
   --shade: rgba(20, 33, 61, .5);
   /* 종이 물건 윤곽선: 가장자리 모양을 따라가도록 drop-shadow로 그려요 */
-  --outline: drop-shadow(0 0 .6px rgba(20, 33, 61, .58));
+  --outline: drop-shadow(0 0 .9px rgba(20, 33, 61, .8));
   --ring: 0 0 0 1px rgba(20, 33, 61, .38);
+  --line-ink: rgba(20, 33, 61, .55);
   --shadow-1: 2px 2px 0 var(--shade);
   --shadow-2: 4px 4px 0 var(--shade);
   --shadow-3: 8px 8px 0 rgba(20, 33, 61, .58);
@@ -70,18 +71,18 @@ a { color: inherit; }
 /* 서류철 인덱스 탭: 히어로 종이에 붙어 있어요 */
 .tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; margin-bottom: -6px; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-.tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; white-space: nowrap; }
+.tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500; white-space: nowrap; }
 .tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
-.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1px solid var(--tab-line); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
+.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1.5px solid var(--line-ink); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
 .tabs a:not([aria-current]):hover::before, .tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(#F6F3EC, var(--tab)); }
-.tabs a[aria-current="page"] { z-index: auto; margin-bottom: 5px; padding: 13px 22px 9px; font-weight: 700; }
-.tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line); box-shadow: none; }
+.tabs a[aria-current="page"] { z-index: auto; margin-bottom: 4.5px; padding: 13px 22px 9px; font-weight: 700; }
+.tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line-ink); box-shadow: none; }
 .tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
 /* 마닐라 탭: 다른 탭보다 앞, 히어로 종이보다 뒤 (아래쪽은 종이 뒤로 끼워져요) */
-.tabs a[aria-current="page"]::after { inset: -6px -11px -8px 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
+.tabs a[aria-current="page"]::after { inset: -6px -11px -8px 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1.5px solid var(--line-ink); border-bottom-width: 0; }
 
 /* 히어로: 지도 위에 길을 그려 나가요 */
-.hero { position: relative; z-index: 1; margin: 0 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); overflow: hidden;
+.hero { position: relative; z-index: 1; margin: 0 0 36px; background: var(--sheet); border: 1.5px solid var(--line-ink); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); overflow: hidden;
   background-image: var(--blotch), var(--grain), linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 420px 420px, 180px 180px, 22px 22px, 22px 22px; }
 .hero-text { padding: 36px 40px 0; }
 .hero h1 { margin: 0; font-size: clamp(30px, 4.6vw, 48px); line-height: 1.2; letter-spacing: -1.5px; }
@@ -169,7 +170,7 @@ a { color: inherit; }
 .notes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 .notes details { position: relative; padding: 20px 20px 16px; }
 .notes details::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(transparent 80%, rgba(255, 255, 255, .55) 81%, rgba(120, 90, 20, .07) 82%, transparent 83.5%), var(--grain), linear-gradient(170deg, var(--note), #F6E07E); border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px; box-shadow: inset 0 0 16px rgba(150, 110, 20, .16); filter: url(#worn) var(--outline) drop-shadow(4px 4px 0 var(--shade)); }
-.notes details::before { content: ""; position: absolute; left: 50%; top: -9px; width: 72px; height: 20px; margin-left: -36px; background: var(--tape); border: 1px solid rgba(255, 255, 255, .7); box-shadow: var(--shadow-1); transform: rotate(-3deg); }
+.notes details::before { content: ""; position: absolute; left: 50%; top: -9px; width: 72px; height: 20px; margin-left: -36px; background: var(--tape); border: 1.5px solid var(--line-ink); box-shadow: var(--shadow-1); transform: rotate(-3deg); }
 .notes details:nth-child(1) { transform: rotate(-.6deg); }
 .notes details:nth-child(2) { transform: rotate(.6deg); }
 .notes summary { cursor: pointer; font-weight: 500; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
