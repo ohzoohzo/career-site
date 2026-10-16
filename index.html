@@ -10,8 +10,8 @@
 <style>
 /* 공통 style.css가 생기면 아래 색 변수는 그쪽으로 옮겨요 */
 :root {
-  --paper: #FBF9F3;
-  --sheet: #F8F5EE;
+  --paper: #FBFAF7;
+  --sheet: #F8F7F2;
   --grid: rgba(20, 33, 61, .06);
   --ink: #14213D;
   --ink-2: #4A5570;
@@ -34,9 +34,9 @@
   --tape: rgba(255, 255, 255, .55);
   /* 낡은 종이 질감: 결(grain) · 얼룩(blotch) · 바랜 잉크 마스크(ink) · 가장자리 바램(age) */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .28 0 0 0 0 .16 .2 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
-  --blotch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .4 0 0 0 0 .15 .42 0 0 0 -.19'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23b%29'/%3E%3C/svg%3E");
+  --blotch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .4 0 0 0 0 .15 .22 0 0 0 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23b%29'/%3E%3C/svg%3E");
   --ink-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.15'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23m%29'/%3E%3C/svg%3E");
-  --age-edge: inset 0 0 22px rgba(140, 100, 30, .16);
+  --age-edge: inset 0 0 22px rgba(140, 100, 30, .1);
   /* 종이 그림자 3단계: 바닥에 놓인 종이 · 겹친 종이 · 들린 종이 */
   --shadow-1: 0 1px 2px rgba(20, 33, 61, .08);
   --shadow-2: 0 1px 2px rgba(20, 33, 61, .06), 0 4px 10px rgba(20, 33, 61, .08);
@@ -52,8 +52,9 @@ body {
   word-break: keep-all;
 }
 a { color: inherit; }
-/* 가운데 정렬: 콘텐츠 최대 1040px, 양옆 여백은 화면에 따라 16~48px */
-.wrap { max-width: calc(1040px + 2 * clamp(16px, 5vw, 48px)); margin: 0 auto; padding: 0 clamp(16px, 5vw, 48px); }
+/* 가운데 정렬: 콘텐츠 최대 960px, 양옆 여백은 화면에 따라 20~80px */
+:root { --gutter: clamp(20px, 6vw, 80px); }
+.wrap { max-width: calc(960px + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
 
 /* 헤더 */
 .site-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 18px; flex-wrap: wrap; }
@@ -68,9 +69,11 @@ a { color: inherit; }
 .tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
 .tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1px solid var(--tab-line); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
 .tabs a:not([aria-current]):hover::before, .tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(#F6F3EC, var(--tab)); }
-.tabs a[aria-current="page"] { z-index: 2; margin-bottom: 5px; padding: 13px 30px 9px; font-weight: 700; }
-.tabs a[aria-current="page"]::before { background: var(--sheet); border-color: var(--line); box-shadow: 0 -2px 6px rgba(20, 33, 61, .06); }
-.tabs a[aria-current="page"]::after { inset: -6px -11px 4px 14px; z-index: -2; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
+.tabs a[aria-current="page"] { z-index: auto; margin-bottom: 5px; padding: 13px 30px 9px; font-weight: 700; }
+.tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line); box-shadow: 0 -2px 6px rgba(20, 33, 61, .06); }
+.tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
+/* 마닐라 탭: 다른 탭보다 앞, 히어로 종이보다 뒤 (아래쪽은 종이 뒤로 끼워져요) */
+.tabs a[aria-current="page"]::after { inset: -6px -11px -8px 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
 
 /* 히어로: 지도 위에 길을 그려 나가요 */
 .hero { position: relative; z-index: 1; margin: 0 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); overflow: hidden;
@@ -125,9 +128,9 @@ a { color: inherit; }
 
 /* 채용 공고 접수증 */
 .tickets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
-.tickets li { filter: drop-shadow(0 1px 1px rgba(20, 33, 61, .08)) drop-shadow(0 4px 8px rgba(20, 33, 61, .08)); transition: transform .2s; }
+.tickets li { display: flex; filter: drop-shadow(0 1px 1px rgba(20, 33, 61, .08)) drop-shadow(0 4px 8px rgba(20, 33, 61, .08)); transition: transform .2s; }
 .tickets li:hover { transform: translateY(-3px) rotate(-.4deg); }
-.ticket { --tooth: 6px; display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 20px 0 20px 20px; background: var(--grain), #FEFCF7; box-shadow: inset 0 0 18px rgba(140, 100, 30, .12);
+.ticket { --tooth: 6px; flex: 1; display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 20px 0 20px 20px; background: var(--grain), #FEFCF7; box-shadow: inset 0 0 18px rgba(140, 100, 30, .12);
   -webkit-mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x;
           mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x; }
 .ticket .stub { align-self: stretch; display: grid; place-items: center; padding: 0 18px; margin-left: 12px; border-left: 2px dashed var(--line); }
@@ -190,7 +193,7 @@ a { color: inherit; }
     <span><b>커리어 길잡이</b><small>좋은 시작이, 좋은 커리어를 만듭니다.</small></span>
   </a>
   <nav class="tabs" aria-label="주 메뉴">
-    <a href="index.html" aria-current="page">홈</a>
+    <a href="index.html" aria-current="page"><span>홈</span></a>
     <a href="roles/index.html">직무 사전</a>
     <a href="jobs/index.html">채용 공고</a>
     <a href="faq/index.html">자주 묻는 질문</a>
