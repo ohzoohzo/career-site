@@ -12,8 +12,9 @@
 | 직무 사전 | `roles/index.html` | 선이 |
 | 채용 공고 | `jobs/index.html` | 명근 |
 | 자주 묻는 질문 | `faq/index.html` | 현경 |
+| 1분 자기소개 | `interview/index.html` | ___ |
 
-공통 파일(`CLAUDE.md`, `style.css`, `_틀.html`, `jobs.js`) 담당: ___
+공통 파일(`CLAUDE.md`, `style.css`, `_틀.html`) 담당: ___
 
 ## 컨셉
 
@@ -34,20 +35,24 @@
 ```
 career-site/
 ├── CLAUDE.md      공통 규칙 (이 파일)
-├── style.css      공통 색·글꼴·간격
-├── _틀.html       모든 페이지의 시작 틀 (헤더·메뉴·푸터)
-├── jobs.js        가상 채용 공고 데이터
+├── style.css      공통 메뉴(헤더·로고·탭)·색·선·그림자
+├── _틀.html       새 페이지의 시작 틀 (메뉴 마크업이 들어 있어요)
 ├── index.html     홈
-├── roles/  faq/  jobs/   각자 CLAUDE.md + index.html
+├── roles/  jobs/  faq/  interview/   각자 index.html (+ 페이지 CSS·JS)
 └── .claude/skills/check-site/
 ```
 
 ## 만들 때
 
 - HTML·CSS·JavaScript만 씁니다. 프레임워크, npm, 빌드 도구는 쓰지 않아요.
-- 파일을 더블클릭해서 열어도 동작해야 합니다. 그래서 **`fetch`는 쓰지 않고**, 데이터는 `<script src="../jobs.js">`로 불러요.
-- 새 페이지는 `_틀.html`을 복사해서 시작합니다. 헤더·메뉴·푸터 모양은 바꾸지 않아요.
-- 메뉴에서 내 페이지 링크에만 `aria-current="page"`를 넣습니다.
+- 파일을 더블클릭해서 열어도 동작해야 합니다. 그래서 **`fetch`는 쓰지 않고**, 데이터는 `<script src="data.js">`처럼 불러요.
+- 새 페이지는 `_틀.html`을 복사해서 시작합니다.
+- **메뉴는 모든 페이지가 똑같이 씁니다.**
+  - `<head>`에서 `../style.css`를 내 페이지 CSS보다 먼저 불러와요.
+  - `<header class="wrap menu">…</header>`는 `_틀.html`에서 그대로 복사하고, 내 탭에만 `aria-current="page"`와 `<span>`을 넣어요.
+  - 바로 아래 종이(히어로)에 탭을 끼우려면 `menu--on-sheet`를 더하고, 그 종이에 `position: relative; z-index: 1;`과 1.5px 위 테두리를 줘요.
+  - 메뉴 CSS(`.menu`, `.menu-logo`, `.menu-tabs`)는 페이지에서 덮어쓰지 않아요. 바꿀 게 있으면 `style.css`를 고치고 모든 페이지를 확인해요.
+  - 메뉴에 탭을 더하거나 빼면 `_틀.html`과 모든 페이지의 메뉴를 함께 고쳐요.
 - 링크: 하위 폴더 페이지는 `../`로 시작합니다 (`../index.html`, `../faq/index.html`). 홈만 `roles/index.html`처럼 씁니다.
 - 외부 라이브러리·이미지·폰트 주소를 새로 넣지 않아요. 필요하면 공통 파일 담당에게 말합니다. (예외: 공통 글꼴 IBM Plex Sans KR의 Google Fonts 주소)
 

@@ -33,25 +33,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
 
-/* 헤더 */
-header.site { border-bottom: 1px solid var(--line); }
-header.site .wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 14px; }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 10px; }
-.brand svg { width: 38px; height: 38px; flex: none; }
-.brand b { display: block; font-size: 1.15rem; line-height: 1.2; }
-.brand small { color: var(--ink-soft); font-size: .72rem; }
-/* 서류철 인덱스 탭: 홈(page/home-tabs) 탭 코드를 그대로 따라 했어요 */
-nav.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; scrollbar-width: none; }
-nav.tabs::-webkit-scrollbar { display: none; }
-nav.tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; white-space: nowrap; }
-nav.tabs a::before, nav.tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
-nav.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1px solid var(--tab-line); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px var(--tab-shadow); }
-nav.tabs a:not([aria-current]):hover::before, nav.tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(var(--tab-hover), var(--tab)); }
-nav.tabs a[aria-current="page"] { z-index: auto; margin-bottom: -1px; padding: 13px 22px 9px; font-weight: 700; }
-nav.tabs a[aria-current="page"]::before { z-index: 2; background: var(--paper); border-color: var(--line); box-shadow: none; }
-nav.tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
 /* 마닐라(노란) 폴더 탭: 지금 탭 뒤에서 오른쪽 위로 살짝 보여요 */
-nav.tabs a[aria-current="page"]::after { inset: -6px -11px 0 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
 
 /* 제목 */
 .hero { padding: 26px 0 8px; }
@@ -170,9 +152,6 @@ footer.site b { color: var(--ink); }
 @media (max-width: 420px) {
   .chip { padding: 6px 13px; }
   .filters .sep { display: none; }
-  nav.tabs { padding: 12px 12px 0 4px; gap: 2px; }
-  nav.tabs a { padding: 8px 10px 7px; font-size: 13px; }
-  nav.tabs a[aria-current="page"] { padding: 11px 13px 8px; }
   .note .co, .note .ti { padding-right: 0; }
   .note { padding: 38px 22px 52px 24px; }
   .days td { height: 34px; }
