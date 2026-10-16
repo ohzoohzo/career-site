@@ -18,3 +18,9 @@
 - `style.css`와 `_틀.html`은 디자인 담당 1명만 고칩니다.
 - 다른 사람 폴더는 고치지 않고 담당자에게 말합니다.
 - 합친 뒤 `/check-site`로 사이트 전체를 점검합니다.
+
+## 시안
+
+| 페이지 | 시안 |
+|---|---|
+| 홈 (여정의 시작) | [docs/mockups/home.png](docs/mockups/home.png) |
