@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>직무 사전 | 커리어 길잡이</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* 직무 사전 — 직업 카드 아카이브 (인덱스 카드, 파일 폴더). 색은 style.css 변수만 씀 */
+    .roles-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+    .roles-hero .drawer { font-size: 56px; line-height: 1; transform: rotate(-6deg); }
+
+    /* 파일 폴더 탭 */
+    .folder-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; border-bottom: 2px solid var(--line); }
+    .folder-tab {
+      font: inherit; font-weight: 700; color: var(--text-sub); cursor: pointer;
+      min-width: 72px; height: 44px; padding: 0 18px;
+      border: 1px solid var(--line); border-bottom: 0; border-radius: 10px 10px 0 0;
+      background: var(--surface-muted);
+    }
+    .folder-tab:hover { color: var(--text-strong); }
+    .folder-tab[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--surface); }
+    .folder-tab:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+    .result-count { margin: 16px 0; }
+
+    /* 인덱스 카드 */
+    .role-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    .index-card {
+      --tone: var(--primary);
+      position: relative; overflow: hidden;
+      border: 1px solid var(--line); border-radius: 4px;
+      background-color: var(--surface);
+      background-image: repeating-linear-gradient(to bottom, transparent 0 27px, var(--line) 27px 28px);
+      background-position: 0 64px;
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--text-strong) 8%, transparent);
+      padding: 0 20px 16px;
+    }
+    .index-card[data-group="design"] { --tone: var(--accent); }
+    .index-card[data-group="po"] { --tone: var(--warning); }
+    .index-card[data-group="marketing"] { --tone: var(--primary-pressed); }
+    /* 카드 위 색 띠 + 접힌 모서리 */
+    .index-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--tone); }
+    .index-card::after {
+      content: ""; position: absolute; top: 0; right: 0; width: 22px; height: 22px;
+      background: linear-gradient(225deg, var(--surface-muted) 50%, var(--line) 50%);
+    }
+    .index-card[hidden] { display: none; }
+
+    .card-label { display: inline-block; margin-top: 18px; font-size: var(--caption); font-weight: 700; color: var(--tone); }
+    .index-card h2 { margin: 2px 0 12px; font-size: var(--title-l); }
+    .card-body { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px 16px; background: var(--surface); }
+    .card-body h3 { margin: 0 0 4px; font-size: var(--caption); color: var(--text-sub); }
+    .card-body ul { margin: 0; padding-left: 18px; }
+    .card-body .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .card-body .tag-group + .tag-group { margin-top: 10px; }
+    .ai-tip { margin: 14px 0 0; padding-top: 10px; border-top: 1px dashed var(--line); background: var(--surface); }
+    .ai-tip strong { color: var(--tone); }
+
+    .empty { display: none; }
+
+    @media (max-width: 720px) {
+      .role-grid { grid-template-columns: 1fr; }
+      .roles-hero .drawer { font-size: 44px; }
+    }
+    @media (max-width: 400px) {
+      .card-body { grid-template-columns: 1fr; }
+      .folder-tab { flex: 1 1 auto; min-width: 0; padding: 0 10px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== 공통 헤더: 고치지 마세요 (내 메뉴에만 aria-current="page") ===== -->
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="../index.html">커리어 길잡이</a>
+      <button class="menu-toggle" type="button" aria-label="메뉴 열기" onclick="document.querySelector('.menu').classList.toggle('open')">☰</button>
+      <ul class="menu">
+        <li><a href="../index.html">홈</a></li>
+        <li><a href="../roles/index.html" aria-current="page">직무 사전</a></li>
+        <li><a href="../jobs/index.html">채용 공고</a></li>
+        <li><a href="../faq/index.html">자주 묻는 질문</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="roles-hero">
+        <div>
+          <h1>직무 사전</h1>
+          <p class="lead">하는 일부터 필요한 역량까지, 나에게 맞는 직무를 찾아보세요.</p>
+        </div>
+        <span class="drawer" aria-hidden="true">🗂️</span>
+      </div>
+
+      <ul class="folder-tabs" aria-label="직군으로 보기">
+        <li><button class="folder-tab" type="button" data-filter="all" aria-pressed="true">전체</button></li>
+        <li><button class="folder-tab" type="button" data-filter="dev" aria-pressed="false">개발</button></li>
+        <li><button class="folder-tab" type="button" data-filter="design" aria-pressed="false">디자인</button></li>
+        <li><button class="folder-tab" type="button" data-filter="po" aria-pressed="false">PO</button></li>
+        <li><button class="folder-tab" type="button" data-filter="marketing" aria-pressed="false">마케팅</button></li>
+      </ul>
+
+      <p class="result-count caption" aria-live="polite"></p>
+
+      <div class="role-grid" id="role-grid"></div>
+    </div>
+  </main>
+
+  <!-- ===== 공통 푸터: 고치지 마세요 ===== -->
+  <footer class="site-footer">
+    <div class="wrap">© 2026 커리어 길잡이 · 수업용 실습 사이트 · 모든 회사와 공고는 가상입니다 · ○조</div>
+  </footer>
+
+  <script>
+    // 직무 카드 데이터 — 직군마다 2개씩, 같은 분량으로
+    const GROUP_NAMES = { dev: "개발", design: "디자인", po: "PO", marketing: "마케팅" };
+    const ROLES = [
+      { group: "dev", name: "프론트엔드 개발자",
+        tasks: ["사용자 화면을 구현해요", "클릭과 이동을 연결해요", "화면 속도와 품질을 높여요"],
+        skills: ["화면 구현", "문제 해결"], tools: ["코드 편집기", "브라우저"],
+        ai: "코드 초안을 만들어요" },
+      { group: "dev", name: "백엔드 개발자",
+        tasks: ["서버의 기능을 만들어요", "데이터를 안전하게 관리해요", "안정적인 서비스를 운영해요"],
+        skills: ["서버 설계", "데이터 이해"], tools: ["데이터베이스", "서버 도구"],
+        ai: "오류 원인을 찾아요" },
+      { group: "design", name: "프로덕트 디자이너",
+        tasks: ["사용자의 문제를 발견해요", "서비스 화면을 설계해요", "사용성을 검증하고 개선해요"],
+        skills: ["화면 설계", "사용자 이해"], tools: ["디자인 도구", "협업 보드"],
+        ai: "시안을 빠르게 탐색해요" },
+      { group: "design", name: "사용자 경험 리서처",
+        tasks: ["사용자의 이야기를 들어요", "행동과 요구를 분석해요", "개선 방향의 근거를 찾아요"],
+        skills: ["인터뷰", "분석력"], tools: ["설문 도구", "분석 도구"],
+        ai: "인터뷰 내용을 정리해요" },
+      { group: "po", name: "프로덕트 오너",
+        tasks: ["제품의 목표를 정해요", "일의 우선순위를 결정해요", "팀과 함께 성과를 만들어요"],
+        skills: ["우선순위", "소통"], tools: ["문서 도구", "일정 보드"],
+        ai: "기획 초안을 정리해요" },
+      { group: "po", name: "서비스 기획자",
+        tasks: ["사용자 흐름을 그려요", "기능 정책을 정리해요", "출시 후 지표를 살펴봐요"],
+        skills: ["논리적 구조화", "데이터 해석"], tools: ["화면 흐름도", "지표 대시보드"],
+        ai: "요구사항을 빠짐없이 정리해요" },
+      { group: "marketing", name: "콘텐츠 마케터",
+        tasks: ["고객에게 전할 이야기를 찾아요", "콘텐츠를 기획하고 만들어요", "반응을 분석하고 개선해요"],
+        skills: ["글쓰기", "콘텐츠 기획"], tools: ["편집 도구", "분석 도구"],
+        ai: "콘텐츠 아이디어를 넓혀요" },
+      { group: "marketing", name: "퍼포먼스 마케터",
+        tasks: ["광고 목표를 세워요", "채널별 성과를 비교해요", "예산을 효율적으로 나눠요"],
+        skills: ["숫자 감각", "실험 설계"], tools: ["광고 관리 도구", "분석 도구"],
+        ai: "광고 문구 후보를 만들어요" }
+    ];
+
+    const grid = document.getElementById("role-grid");
+    const countText = document.querySelector(".result-count");
+    const tabs = document.querySelectorAll(".folder-tab");
+
+    const listItems = (arr) => arr.map((t) => `<li>${t}</li>`).join("");
+    const chips = (arr) => arr.map((t) => `<span class="chip">${t}</span>`).join("");
+
+    grid.innerHTML = ROLES.map((r) => `
+      <article class="index-card" data-group="${r.group}">
+        <span class="card-label">${GROUP_NAMES[r.group]}</span>
+        <h2>${r.name}</h2>
+        <div class="card-body">
+          <div>
+            <h3>하는 일</h3>
+            <ul>${listItems(r.tasks)}</ul>
+          </div>
+          <div>
+            <div class="tag-group"><h3>필요 역량</h3><div class="tags">${chips(r.skills)}</div></div>
+            <div class="tag-group"><h3>관련 도구</h3><div class="tags">${chips(r.tools)}</div></div>
+          </div>
+        </div>
+        <p class="ai-tip"><strong>AI는 이렇게:</strong> ${r.ai}</p>
+      </article>`).join("");
+
+    function showGroup(filter) {
+      let shown = 0;
+      grid.querySelectorAll(".index-card").forEach((card) => {
+        const match = filter === "all" || card.dataset.group === filter;
+        card.hidden = !match;
+        if (match) shown++;
+      });
+      tabs.forEach((tab) => tab.setAttribute("aria-pressed", tab.dataset.filter === filter));
+      const label = filter === "all" ? "전체" : GROUP_NAMES[filter];
+      countText.textContent = `${label} 직무 카드 ${shown}장을 보고 있어요.`;
+    }
+
+    tabs.forEach((tab) => tab.addEventListener("click", () => showGroup(tab.dataset.filter)));
+    showGroup("all");
+  </script>
+</body>
+</html>
