@@ -132,7 +132,7 @@ a { color: inherit; }
 .map .pencil { animation-delay: 2.7s; }
 @media (prefers-reduced-motion: reduce) {
   .map .route, .map .pins li, .map .flag, .map .pencil, .logo .needle, .logo:hover .needle, .logo:focus-visible .needle, .js .plant-pin.is-planted { animation: none; }
-  .btn, .tickets li, .folder .paper { transition: none; }
+  .btn, .tickets li, .folder .paper, .folder .front p { transition: none; }
 }
 
 /* 첫 장면 마지막: '어떤 길로 가 볼까요?' 핀이 꽂혀요 (화면 밖이면 처음 보일 때 한 번) */
@@ -167,6 +167,17 @@ a { color: inherit; }
 .folder p { margin: 2px 0 12px; font-size: 15px; color: var(--ink-2); }
 .folder a { display: inline-block; margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(20, 33, 61, .26); width: 100%; font-size: 15px; text-decoration: none; }
 .folder a:hover, .folder a:focus-visible { text-decoration: underline; }
+/* 마우스가 있는 기기: 설명은 폴더 안 종이에 적혀 있다가, 올리면 종이가 올라오며 보여요.
+   터치 기기는 마우스 올림이 없어서 설명이 앞장에 그대로 보여요. */
+@media (hover: hover) and (pointer: fine) {
+  .folder .front { padding-top: 16px; }
+  .folder .front h3 { margin-bottom: 18px; }
+  .folder .front p { position: absolute; left: 7%; right: 9%; bottom: 100%; margin: 0; padding: 0 12px 8px; font-size: 14px; line-height: 1.45; color: var(--ink); opacity: 0; translate: 0 12px; transition: opacity .2s, translate .2s; pointer-events: none; }
+  .folder:hover .front p, .folder:focus-within .front p { opacity: 1; translate: 0 0; }
+  .folder:hover .paper, .folder:focus-within .paper { transform: translateY(-36px) rotate(-1deg); }
+  .folder .paper::before { transition: opacity .15s; }
+  .folder:hover .paper::before, .folder:focus-within .paper::before { opacity: 0; }
+}
 
 /* 채용 공고 접수증 */
 .tickets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
@@ -180,7 +191,7 @@ a { color: inherit; }
 .ticket .info { margin-bottom: 12px; }
 .ticket .co { font-size: 14px; color: var(--ink-2); }
 .ticket h3 { margin: 0 0 8px; font-size: 16px; }
-.tag { display: inline-block; padding: 1px 10px; border-radius: 99px; font-size: 14px; }
+.tag { display: inline-block; padding: 1px 10px; border: 1.5px solid var(--line-ink); border-radius: 99px; font-size: 14px; }
 .dday { padding: 2px 10px; border: 3px solid var(--red); border-radius: 4px; color: var(--red); font-weight: 700; font-size: 18px; transform: rotate(-6deg); opacity: .9; -webkit-mask: var(--ink-mask); mask: var(--ink-mask); }
 
 /* 자주 묻는 질문 메모지 */
