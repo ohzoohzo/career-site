@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>페이지 이름 · 커리어 길잡이</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  /* 내 페이지 스타일은 여기에. .wrap 폭은 페이지마다 정해요. */
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+</style>
+</head>
+<body>
+
+<!-- 메뉴: 그대로 복사하고, 내 탭에만 aria-current="page"와 <span>을 넣어요.
+     바로 아래 종이에 탭을 끼우려면 class에 menu--on-sheet를 더해요. -->
+<header class="wrap menu">
+  <a class="menu-logo" href="../index.html">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="#C8313A" stroke-width="3"/><path class="needle" d="M27 13 22 22 13 27 18 18Z" fill="#C8313A"/></svg>
+    <b>커리어 길잡이</b>
+  </a>
+  <nav class="menu-tabs" aria-label="주 메뉴">
+    <a href="../index.html">홈</a>
+    <a href="../roles/index.html">직무 사전</a>
+    <a href="../jobs/index.html">채용 공고</a>
+    <a href="../faq/index.html">자주 묻는 질문</a>
+    <a href="../interview/index.html">1분 자기소개</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <h1>페이지 제목</h1>
+</main>
+
+</body>
+</html>
