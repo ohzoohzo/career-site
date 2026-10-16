@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>커리어 길잡이</title>
+<style>
+/* 공통 style.css가 생기면 아래 색 변수는 그쪽으로 옮겨요 */
+:root {
+  --paper: #FBF9F3;
+  --sheet: #F8F5EE;
+  --grid: rgba(20, 33, 61, .06);
+  --ink: #14213D;
+  --ink-2: #4A5570;
+  --line: #E4DED0;
+  --red: #C8313A;
+  --red-bg: #FBE9E9;
+  --folder: #F3DFAE;
+  --folder-tab: #EBD39A;
+  --note: #FFF2A8;
+  --white: #FFFFFF;
+  --dev: #E3EEFB;
+  --design: #E4F2E6;
+  --po: #EDE6FA;
+  --mkt: #FBE6EC;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.6 "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  word-break: keep-all;
+}
+a { color: inherit; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+
+/* 헤더 */
+.site-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-top: 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 12px; }
+.logo svg { flex: none; }
+.logo b { display: block; font-size: 22px; letter-spacing: -.5px; }
+.logo small { display: block; font-size: 12px; color: var(--ink-2); }
+.tabs { display: flex; gap: 4px; overflow-x: auto; max-width: 100%; }
+.tabs a { display: block; padding: 10px 18px 8px; border: 1px solid var(--line); border-bottom: 0; border-radius: 10px 10px 0 0; background: var(--folder-tab); text-decoration: none; font-size: 15px; white-space: nowrap; }
+.tabs a[aria-current="page"] { background: var(--paper); font-weight: 700; position: relative; top: 1px; }
+
+/* 히어로: 지도 위에 길을 그려 나가요 */
+.hero { margin: 28px 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 2px 8px rgba(20, 33, 61, .06); overflow: hidden;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 22px 22px; }
+.hero-text { padding: 36px 40px 0; }
+.hero h1 { margin: 0; font-size: clamp(30px, 4.6vw, 48px); line-height: 1.2; letter-spacing: -1.5px; }
+.hero p { margin: 10px 0 20px; color: var(--ink-2); font-size: 17px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 6px; background: var(--ink); color: var(--white); text-decoration: none; font-weight: 700; }
+.btn:hover, .btn:focus-visible { outline: 3px solid var(--folder); outline-offset: 2px; }
+
+.map { position: relative; aspect-ratio: 1600 / 426; margin-top: 12px; }
+.map > img { position: absolute; }
+.map > img:not(.deco) { inset: 0; width: 100%; height: 100%; }
+.pencil { width: 11%; right: 0; top: 0; }
+.flag { width: 12.5%; left: 79%; top: 4%; }
+.compass { width: 9%; right: 3%; bottom: 6%; }
+.stamp { position: absolute; left: 4%; top: 72%; transform: rotate(-8deg); padding: 4px 14px; border: 2px solid var(--red); border-radius: 50%; color: var(--red); font-weight: 800; font-size: clamp(11px, 1.5vw, 18px); white-space: nowrap; }
+.pins { list-style: none; margin: 0; padding: 0; }
+.pins li { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; }
+.pins svg { width: clamp(16px, 2.2vw, 28px); height: auto; }
+.pins span { position: absolute; top: 100%; margin-top: 4px; white-space: nowrap; font-size: 15px; background: var(--sheet); padding: 0 4px; }
+.pins .done span { font-weight: 700; }
+.pins .todo { opacity: .65; }
+.pins .last span { top: 30%; right: 100%; margin: 0 6px 0 0; }
+.note { position: absolute; right: 10%; top: 40%; transform: rotate(-8deg); font-size: 15px; color: var(--ink-2); line-height: 1.4; border-bottom: 1px solid var(--ink-2); }
+
+/* 섹션 공통 */
+.sec { margin: 0 0 40px; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.sec h2 { display: flex; align-items: center; gap: 8px; margin: 0; padding-bottom: 8px; font-size: 22px; letter-spacing: -.5px; }
+.more { font-size: 14px; color: var(--ink-2); }
+
+/* 직군 폴더 */
+.folders { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
+.folder { position: relative; padding: 22px 20px 16px; margin-top: 14px; background: var(--folder); border-radius: 0 8px 8px 8px; box-shadow: 0 3px 6px rgba(20, 33, 61, .08); }
+.folder::before { content: ""; position: absolute; left: 0; top: -14px; width: 42%; height: 15px; background: var(--folder); border-radius: 8px 8px 0 0; }
+.folder h3 { margin: 0; font-size: 19px; }
+.folder p { margin: 2px 0 12px; font-size: 14px; color: var(--ink-2); }
+.folder a { display: inline-block; padding-top: 10px; border-top: 1px solid rgba(20, 33, 61, .12); width: 100%; font-size: 14px; text-decoration: none; }
+.folder a:hover, .folder a:focus-visible { text-decoration: underline; }
+
+/* 채용 공고 접수증 */
+.tickets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
+.ticket { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 18px 20px; background: var(--white); border-top: 2px dashed var(--line); border-bottom: 2px dashed var(--line); box-shadow: 0 2px 6px rgba(20, 33, 61, .06); }
+.ticket .co { font-size: 13px; color: var(--ink-2); }
+.ticket h3 { margin: 0 0 8px; font-size: 17px; }
+.tag { display: inline-block; padding: 1px 10px; border-radius: 99px; font-size: 13px; }
+.dday { padding: 2px 10px; border: 2px solid var(--red); border-radius: 4px; color: var(--red); font-weight: 800; font-size: 22px; transform: rotate(-6deg); }
+
+/* 자주 묻는 질문 메모지 */
+.notes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.notes details { background: var(--note); padding: 16px 20px; box-shadow: 0 3px 6px rgba(20, 33, 61, .1); }
+.notes details:nth-child(1) { transform: rotate(-.6deg); }
+.notes details:nth-child(2) { transform: rotate(.6deg); }
+.notes summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.notes summary::after { content: "+"; font-size: 20px; line-height: 1; }
+.notes details[open] summary::after { content: "−"; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes p { margin: 10px 0 0; color: var(--ink-2); font-size: 15px; }
+
+.site-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 18px 0 28px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+.site-foot b { color: var(--ink); font-size: 15px; }
+
+.steps-m { display: none; list-style: none; margin: 0; padding: 12px 20px 20px; gap: 4px; font-size: 14px; counter-reset: s; }
+.steps-m li::before { counter-increment: s; content: counter(s) ". "; font-weight: 700; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+@media (max-width: 860px) {
+  .folders { grid-template-columns: repeat(2, 1fr); }
+  .tickets { grid-template-columns: 1fr; }
+  .note { display: none; }
+  .pins span { font-size: 12px; }
+}
+@media (max-width: 560px) {
+  .hero-text { padding: 24px 20px 0; }
+  .map { margin-top: 8px; }
+  .pins span { display: none; }
+  .steps-m { display: grid; }
+  .notes { grid-template-columns: 1fr; }
+  .folders { gap: 14px; }
+  .folder { padding: 18px 14px 12px; }
+}
+</style>
+</head>
+<body>
+
+<header class="wrap site-head">
+  <a class="logo" href="index.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="#C8313A" stroke-width="3"/><path d="M27 13 22 22 13 27 18 18Z" fill="#C8313A"/></svg>
+    <span><b>커리어 길잡이</b><small>좋은 시작이, 좋은 커리어를 만듭니다.</small></span>
+  </a>
+  <nav class="tabs" aria-label="주 메뉴">
+    <a href="index.html" aria-current="page">홈</a>
+    <a href="roles/index.html">직무 사전</a>
+    <a href="jobs/index.html">채용 공고</a>
+    <a href="faq/index.html">자주 묻는 질문</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <h1 id="hero-title">나의 첫 직무,<br>여기서부터 그려가요</h1>
+      <p>직무 탐색부터 첫 지원까지, 나만의 길을 차근차근.</p>
+      <a class="btn" href="roles/index.html">첫 걸음: 직무 사전 보기 →</a>
+    </div>
+
+    <div class="map">
+      <img src="assets/home/map.png" alt="">
+      <img src="assets/home/route.png" alt="">
+      <img class="deco flag" src="assets/home/flag.png" alt="">
+      <img class="deco pencil" src="assets/home/pencil.png" alt="">
+      <img class="deco compass" src="assets/home/compass.png" alt="">
+      <span class="stamp" aria-hidden="true">출발 · 오늘</span>
+      <ol class="pins" aria-label="취업 준비 순서">
+        <li class="done" style="left:33%;top:74.5%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><path d="m7.5 11 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.4"/></svg><span>① 직무 알아보기</span></li>
+        <li class="todo" style="left:50%;top:63.4%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><circle cx="12" cy="11" r="4" fill="#fff"/></svg><span>② 공고 살펴보기</span></li>
+        <li class="todo" style="left:66%;top:50.3%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><circle cx="12" cy="11" r="4" fill="#fff"/></svg><span>③ 서류 준비</span></li>
+        <li class="todo last" style="left:81.75%;top:39%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><circle cx="12" cy="11" r="4" fill="#fff"/></svg><span>④ 지원하기</span></li>
+      </ol>
+      <p class="note" aria-hidden="true">지금,<br>나만의 길을<br>그려 보세요</p>
+    </div>
+    <ol class="steps-m" aria-hidden="true">
+      <li>직무 알아보기 ✓</li><li>공고 살펴보기</li><li>서류 준비</li><li>지원하기</li>
+    </ol>
+  </section>
+
+  <section class="sec" aria-labelledby="roles-title">
+    <div class="sec-head"><h2 id="roles-title">📍 어떤 길로 가 볼까요?</h2></div>
+    <ul class="folders">
+      <li class="folder"><h3>&lt;/&gt; 개발</h3><p>코드로 문제를 해결해요</p><a href="roles/index.html#dev">이 길로 가기 →</a></li>
+      <li class="folder"><h3>✏️ 디자인</h3><p>더 나은 경험을 만들어요</p><a href="roles/index.html#design">이 길로 가기 →</a></li>
+      <li class="folder"><h3>📊 PO</h3><p>제품의 방향을 그려요</p><a href="roles/index.html#po">이 길로 가기 →</a></li>
+      <li class="folder"><h3>📣 마케팅</h3><p>가치를 사람에게 전해요</p><a href="roles/index.html#marketing">이 길로 가기 →</a></li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="jobs-title">
+    <div class="sec-head"><h2 id="jobs-title">🚩 마감 임박 채용 공고</h2><a class="more" href="jobs/index.html">채용 공고 더 보기 →</a></div>
+    <!-- 가상 공고예요. jobs.js가 생기면 그 데이터로 바꿔요 -->
+    <ul class="tickets">
+      <li class="ticket"><div><div class="co">모눈랩</div><h3>프론트엔드 개발자</h3><span class="tag" style="background:var(--dev)">개발</span></div><span class="dday">D-7</span></li>
+      <li class="ticket"><div><div class="co">여백스튜디오</div><h3>주니어 프로덕트 디자이너</h3><span class="tag" style="background:var(--design)">디자인</span></div><span class="dday">D-5</span></li>
+      <li class="ticket"><div><div class="co">다음페이지</div><h3>콘텐츠 마케터</h3><span class="tag" style="background:var(--mkt)">마케팅</span></div><span class="dday">D-3</span></li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="faq-title">
+    <div class="sec-head"><h2 id="faq-title">📍 자주 묻는 질문</h2><a class="more" href="faq/index.html">더 보기 →</a></div>
+    <div class="notes">
+      <details><summary>희망 직무를 아직 정하지 못했어요.</summary><p>괜찮아요. 좋아했던 일과 잘했던 경험부터 적어 보고, 직무 사전에서 비슷한 일을 찾아봐요.</p></details>
+      <details><summary>관련 경험이 없어도 지원할 수 있나요?</summary><p>네. 작은 개인 프로젝트나 수업 과제도 경험이 돼요. 무엇을 배웠는지 한 줄로 정리해 보세요.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap site-foot">
+  <span><b>커리어 길잡이</b> · 좋은 시작이, 좋은 커리어를 만듭니다.</span>
+  <span>지금도, 더 나은 내일을 준비하는 모든 사람의 곁에.</span>
+</footer>
+
+</body>
+</html>
