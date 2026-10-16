@@ -83,13 +83,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .tabs::-webkit-scrollbar { display: none; }
 .tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500; white-space: nowrap; }
 .tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
-.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1.5px solid var(--line-ink); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px var(--tab-shade); }
+.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1.5px solid var(--line-soft); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px var(--tab-shade); }
 .tabs a:not([aria-current]):hover::before, .tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(var(--tab-hover), var(--tab)); }
 .tabs a[aria-current="page"] { z-index: auto; margin-bottom: 4.5px; padding: 13px 22px 9px; font-weight: 700; }
-.tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line-ink); box-shadow: none; }
+.tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line-soft); box-shadow: none; }
 .tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
 /* 마닐라 탭: 다른 탭보다 앞, 모눈종이보다 뒤 */
-.tabs a[aria-current="page"]::after { inset: -6px -11px -8px 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1.5px solid var(--line-ink); border-bottom-width: 0; }
+.tabs a[aria-current="page"]::after { inset: -6px -11px -8px 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1.5px solid var(--line-soft); border-bottom-width: 0; }
 
 /* ---------- 제목 + 검색: 탭이 붙는 모눈종이 ---------- */
 .hero {
@@ -162,7 +162,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---------- 메모지 질문 (홈 메모지와 같은 모양) ---------- */
 .notes { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; align-items: start; }
-@media (min-width: 1024px) { .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 24px; } }
 .note { position: relative; isolation: isolate; padding: 20px 20px 16px; transition: transform .15s; }
 .note::after {
   content: ""; position: absolute; inset: 0; z-index: -1;
