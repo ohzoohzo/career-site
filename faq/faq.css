@@ -1,0 +1,294 @@
+/* =========================================================
+   자주 묻는 질문 — 궁금증 메모함
+   헤더·메뉴·푸터는 홈(index.html)과 같은 모양으로 맞췄어요.
+   색은 모두 var(--…)로만 씁니다.
+   ========================================================= */
+
+/* 공통 style.css가 생기면 아래 변수는 그쪽으로 옮겨요 (홈과 같은 이름·값) */
+:root {
+  --paper: #FBFAF7;
+  --sheet: #F8F7F2;
+  --grid: rgba(20, 33, 61, .06);
+  --ink: #14213D;
+  --ink-2: #4A5570;
+  --ink-deep: #0A1226;
+  --line: #E4DED0;
+  --red: #C8313A;
+  --folder: #F3DFAE;
+  --folder-deep: #E9CF94;
+  --tab: #EFEBE2;
+  --tab-deep: #E3DED2;
+  --tab-hover: #F6F3EC;
+  --note: #FFF2A8;
+  --note-deep: #F6E07E;
+  --white: #FFFFFF;
+  --tape: rgba(255, 255, 255, .55);
+  --mark: #FFE07A;
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .28 0 0 0 0 .16 .2 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
+  --blotch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .4 0 0 0 0 .15 .22 0 0 0 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23b%29'/%3E%3C/svg%3E");
+  --age-edge: inset 0 0 22px rgba(140, 100, 30, .1);
+  --note-age: inset 0 0 16px rgba(150, 110, 20, .16);
+  --note-shine: rgba(255, 255, 255, .55);
+  --note-crease: rgba(120, 90, 20, .07);
+  --tab-shade: rgba(20, 33, 61, .18);
+  --line-soft: rgba(20, 33, 61, .26);
+  --backdrop: rgba(20, 33, 61, .35);
+
+  /* 번짐 없는 단색 그림자: 오려 붙인 종이처럼 또렷하게 */
+  --shade: rgba(20, 33, 61, .5);
+  --shade-strong: rgba(20, 33, 61, .58);
+  --outline: drop-shadow(0 0 .9px rgba(20, 33, 61, .8));
+  --ring: 0 0 0 1px rgba(20, 33, 61, .38);
+  --line-ink: rgba(20, 33, 61, .55);
+  --shadow-1: 2px 2px 0 var(--shade);
+  --shadow-2: 4px 4px 0 var(--shade);
+  --shadow-3: 8px 8px 0 var(--shade-strong);
+
+  --gutter: clamp(20px, 6vw, 80px);
+}
+
+/* ---------- 기본 (홈과 같음) ---------- */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper) url("../assets/home/paper.webp") repeat;
+  background-size: 512px 512px;
+  color: var(--ink);
+  font: 16px/1.6 "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+
+:focus-visible { outline: 3px solid var(--folder-deep); outline-offset: 3px; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: absolute; left: 16px; top: -48px; z-index: 10; padding: 8px 14px; border-radius: 6px; background: var(--ink); color: var(--white); text-decoration: none; }
+.skip-link:focus { top: 12px; }
+
+/* 머티리얼 아이콘 (SVG) */
+.mi { width: 24px; height: 24px; flex: none; fill: currentColor; vertical-align: -5px; }
+.mi.sm { width: 18px; height: 18px; vertical-align: -3px; }
+
+/* ---------- 헤더 + 서류철 탭 (홈과 같음) ---------- */
+.site-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 18px; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 12px; }
+.logo svg { flex: none; stroke: var(--red); fill: var(--red); }
+.logo b { display: block; font-size: 20px; letter-spacing: -.5px; }
+
+.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; margin-bottom: -6px; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500; white-space: nowrap; }
+.tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
+.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1.5px solid var(--line-soft); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px var(--tab-shade); }
+.tabs a:not([aria-current]):hover::before, .tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(var(--tab-hover), var(--tab)); }
+.tabs a[aria-current="page"] { z-index: auto; margin-bottom: 4.5px; padding: 13px 22px 9px; font-weight: 700; }
+.tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line-soft); box-shadow: none; }
+.tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
+/* 마닐라 탭: 다른 탭보다 앞, 모눈종이보다 뒤 */
+.tabs a[aria-current="page"]::after { inset: -6px -11px -8px 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1.5px solid var(--line-soft); border-bottom-width: 0; }
+
+/* ---------- 제목 + 검색: 탭이 붙는 모눈종이 ---------- */
+.hero {
+  position: relative; z-index: 1; margin: 0 0 40px; padding: 34px 40px 30px;
+  background: var(--sheet); border: 1.5px solid var(--line-ink); border-radius: 6px;
+  box-shadow: var(--age-edge), var(--shadow-2);
+  background-image: var(--blotch), var(--grain), linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 420px 420px, 180px 180px, 22px 22px, 22px 22px;
+}
+.hero h1 { margin: 0; font-size: clamp(30px, 4.6vw, 44px); line-height: 1.2; letter-spacing: -1.5px; font-weight: 700; }
+.hero__lead { margin: 8px 0 22px; color: var(--ink-2); font-size: 17px; }
+
+.search {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 8px 0 16px;
+  background: var(--white); border: 1.5px solid var(--line-ink); border-radius: 6px;
+  box-shadow: var(--shadow-1);
+  transition: box-shadow .12s, transform .12s;
+}
+.search:focus-within { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--shade); outline: 3px solid var(--folder); outline-offset: 2px; }
+.search > .mi { color: var(--ink-2); }
+.search__input { flex: 1; min-width: 0; padding: 14px 0; border: 0; background: transparent; font-size: 16px; }
+.search__input::placeholder { color: var(--ink-2); opacity: .75; }
+.search__input:focus { outline: none; }
+.search__input::-webkit-search-cancel-button { display: none; }
+.search__clear { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; color: var(--ink-2); }
+.search__clear:hover { background: var(--tab); color: var(--ink); }
+.search__clear[hidden] { display: none; }
+
+/* 주제 칩: 작은 종이 라벨. 고르면 노란 메모지로 살짝 들려요 */
+.topics { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chip {
+  min-height: 40px; padding: 7px 16px;
+  background: var(--white); border: 1.5px solid var(--line-soft); border-radius: 99px;
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  transition: transform .12s, box-shadow .12s, background .12s;
+}
+.chip:hover { border-color: var(--line-ink); }
+.chip[aria-pressed="true"] {
+  background: var(--note); border-color: var(--line-ink); font-weight: 700;
+  transform: translate(-1px, -1px); box-shadow: var(--shadow-1);
+}
+
+/* ---------- 섹션 머리 (홈과 같음) ---------- */
+.sec { margin: 0 0 40px; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+.sec h2 { display: flex; align-items: center; gap: 8px; margin: 0; padding-bottom: 8px; font-size: 22px; letter-spacing: -.5px; }
+.more { margin: 0; padding-bottom: 8px; font-size: 14px; color: var(--ink-2); }
+
+/* ---------- 직군 + 질문 배치 ---------- */
+.faq-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 32px; align-items: start; }
+
+/* 직군: 인덱스 카드 묶음 */
+.roles { position: sticky; top: 16px; }
+.roles ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.role-btn {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
+  min-height: 42px; padding: 8px 12px;
+  background: var(--grain), var(--white); border: 0; border-radius: 4px;
+  box-shadow: var(--ring);
+  font-size: 15px; font-weight: 500; text-align: left; cursor: pointer;
+  transition: transform .12s, box-shadow .12s;
+}
+.role-btn:hover { transform: translate(-1px, -1px); box-shadow: var(--ring), var(--shadow-1); }
+.role-btn[aria-pressed="true"] {
+  background: var(--grain), linear-gradient(var(--folder), var(--folder-deep));
+  font-weight: 700; transform: translate(-1px, -1px); box-shadow: var(--ring), var(--shadow-1);
+}
+.role-btn__count { font-size: 13px; color: var(--ink-2); }
+
+/* ---------- 메모지 질문 (홈 메모지와 같은 모양) ---------- */
+.notes { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; align-items: start; }
+.note { position: relative; isolation: isolate; padding: 20px 20px 16px; transition: transform .15s; }
+.note::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(transparent 80%, var(--note-shine) 81%, var(--note-crease) 82%, transparent 83.5%), var(--grain), linear-gradient(170deg, var(--note), var(--note-deep));
+  border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px;
+  box-shadow: var(--note-age);
+  filter: url(#worn) var(--outline) drop-shadow(4px 4px 0 var(--shade));
+  transition: filter .15s;
+}
+/* 테이프 */
+.note::before {
+  content: ""; position: absolute; left: var(--tape-x, 50%); top: -9px; z-index: 1;
+  width: 72px; height: 20px; margin-left: -36px;
+  background: var(--tape); border: 1.5px solid var(--line-ink); box-shadow: var(--shadow-1);
+  transform: rotate(var(--tape-r, -3deg));
+}
+.notes > li:nth-child(odd)  .note { transform: rotate(-.5deg); --tape-x: 62%; }
+.notes > li:nth-child(even) .note { transform: rotate(.5deg);  --tape-x: 40%; --tape-r: 3deg; }
+.notes > li .note:hover, .notes > li .note:focus-within { transform: translate(-2px, -2px); }
+.note:hover::after, .note:focus-within::after { filter: url(#worn) var(--outline) drop-shadow(8px 8px 0 var(--shade-strong)); }
+
+.note__h { margin: 0; font-size: inherit; }
+.note__btn {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; width: 100%;
+  padding: 0; border: 0; background: transparent; text-align: left; cursor: pointer;
+}
+.note__btn:focus-visible { outline-offset: 6px; border-radius: 2px; }
+.note__meta { display: block; margin-bottom: 2px; font-size: 13px; color: var(--ink-2); }
+.note__text { display: block; font-size: 16px; font-weight: 500; line-height: 1.5; }
+.note__toggle { flex: none; width: 20px; font-size: 20px; line-height: 1.2; text-align: center; margin-top: 18px; }
+.note__toggle::before { content: "+"; }
+.note__btn[aria-expanded="true"] .note__toggle::before { content: "−"; }
+
+.note__panel { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line-soft); }
+.note__panel p { margin: 0 0 6px; color: var(--ink-2); font-size: 15px; }
+.note__link { display: inline-block; margin-top: 4px; font-size: 15px; font-weight: 500; text-underline-offset: 3px; }
+
+mark { background: var(--mark); color: inherit; padding: 0 1px; }
+
+/* 결과 없음 */
+.empty { padding: 32px 20px; text-align: center; background: var(--grain), var(--white); border-radius: 4px; box-shadow: var(--ring), var(--shadow-2); }
+.empty__title { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
+.empty p { margin: 0 0 16px; color: var(--ink-2); }
+
+/* ---------- 버튼 (홈 .btn과 같음) ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px;
+  border: 0; border-radius: 6px; background: var(--ink); color: var(--white);
+  font-weight: 700; text-decoration: none; cursor: pointer;
+  box-shadow: 0 3px 0 var(--ink-deep), 4px 6px 0 var(--shade);
+  transition: transform .12s, box-shadow .12s;
+}
+.btn:hover { transform: translate(-2px, -3px); box-shadow: 0 6px 0 var(--ink-deep), 8px 11px 0 var(--shade-strong); }
+.btn:active { transform: translate(2px, 3px); box-shadow: 0 0 0 var(--ink-deep), 1px 2px 0 var(--shade); }
+.btn--paper { background: var(--white); color: var(--ink); box-shadow: var(--ring), var(--shadow-1); }
+.btn--paper:hover { box-shadow: var(--ring), 4px 4px 0 var(--shade); }
+.btn--paper:active { box-shadow: var(--ring); }
+
+/* ---------- 질문 넣기 ---------- */
+.ask {
+  display: grid; grid-template-columns: minmax(0, 1fr) 180px; align-items: center; gap: 20px;
+  padding: 28px 32px;
+  background: var(--sheet); border: 1.5px solid var(--line-ink); border-radius: 6px;
+  box-shadow: var(--age-edge), var(--shadow-2);
+  background-image: var(--blotch), var(--grain), linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 420px 420px, 180px 180px, 22px 22px, 22px 22px;
+}
+.ask h2 { padding: 0; margin-bottom: 6px; }
+.ask p { margin: 0 0 20px; color: var(--ink-2); }
+.ask__box { width: 100%; height: auto; }
+.ask__box path, .ask__box rect { stroke: var(--ink); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.ask__spark path { stroke: var(--red); fill: none; }
+.ask__card { fill: var(--note); }
+.ask__q { fill: var(--ink); font: 700 30px "IBM Plex Sans KR", sans-serif; }
+.ask__top { fill: var(--folder-deep); }
+.ask__slot { stroke-width: 5 !important; }
+.ask__side { fill: var(--folder-deep); }
+.ask__front { fill: var(--folder); }
+.ask__label { fill: var(--ink); font: 700 17px "IBM Plex Sans KR", sans-serif; }
+
+/* ---------- 질문 넣기 창 ---------- */
+.dialog {
+  width: min(460px, calc(100% - 32px)); padding: 0; border: 0; border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px;
+  background: var(--grain), linear-gradient(170deg, var(--note), var(--note-deep)); color: var(--ink);
+  box-shadow: var(--note-age), var(--ring), var(--shadow-3);
+}
+.dialog::backdrop { background: var(--backdrop); }
+.dialog__form { display: grid; gap: 8px; padding: 24px 22px 20px; }
+.dialog h2 { margin: 0 0 6px; font-size: 20px; }
+.dialog label { margin-top: 4px; font-size: 15px; font-weight: 500; }
+.dialog select, .dialog textarea { width: 100%; padding: 10px 12px; background: var(--white); border: 1.5px solid var(--line-ink); border-radius: 4px; }
+.dialog textarea { min-height: 96px; resize: vertical; }
+.dialog__note { margin: 4px 0 0; font-size: 13px; color: var(--ink-2); }
+.dialog__done { min-height: 1.4em; margin: 0; font-weight: 700; color: var(--red); }
+.dialog__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.mine { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line-soft); }
+.mine h3 { margin: 0 0 6px; font-size: 15px; }
+.mine ul { max-height: 140px; margin: 0; padding-left: 18px; overflow-y: auto; font-size: 14px; }
+
+/* ---------- 푸터 (홈과 같음) ---------- */
+.site-foot { padding-bottom: 28px; font-size: 14px; color: var(--ink-2); }
+.site-foot > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 18px; border-top: 1px solid var(--line); }
+.site-foot b { color: var(--ink); font-size: 15px; }
+
+/* ---------- 좁은 화면 ---------- */
+@media (max-width: 760px) {
+  .faq-layout { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .roles { position: static; }
+  .roles ul { display: flex; flex-wrap: wrap; gap: 8px; }
+  .role-btn { width: auto; min-height: 40px; }
+}
+@media (max-width: 560px) {
+  /* 탭 4개가 한 화면에 다 보이도록 글자·여백을 화면 폭에 맞춰 줄여요 */
+  .tabs { gap: 2px; padding: 12px 8px 0 0; }
+  .tabs a { padding: 8px clamp(6px, 2.4vw, 14px) 7px; font-size: clamp(11px, 3.6vw, 15px); }
+  .tabs a[aria-current="page"] { padding: 11px clamp(7px, 2.8vw, 16px) 8px; }
+  .tabs a[aria-current="page"]::after { inset: -5px -8px -8px 10px; }
+  .hero { padding: 24px 18px 22px; }
+  .hero__lead { font-size: 16px; }
+  .chip { padding: 6px 13px; font-size: 14px; }
+  .note { padding: 18px 16px 14px; }
+  .ask { grid-template-columns: minmax(0, 1fr); padding: 22px 18px; text-align: center; gap: 4px; }
+  .ask h2 { justify-content: center; }
+  .ask__box { order: -1; max-width: 140px; margin: 0 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+  .notes > li .note, .notes > li .note:hover { transform: none; }
+}
