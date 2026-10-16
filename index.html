@@ -19,6 +19,9 @@
   --folder-deep: #E9CF94;
   --folder-back: #DDBF7E;
   --folder-tab: #EBD39A;
+  --tab: #EFEBE2;
+  --tab-deep: #E3DED2;
+  --tab-line: #D3CCBC;
   --note: #FFF2A8;
   --white: #FFFFFF;
   --dev: #E3EEFB;
@@ -43,19 +46,24 @@ a { color: inherit; }
 .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
 
 /* 헤더 */
-.site-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-top: 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.site-head { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 18px; flex-wrap: wrap; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 12px; }
 .logo svg { flex: none; }
 .logo b { display: block; font-size: 22px; letter-spacing: -.5px; }
 .logo small { display: block; font-size: 12px; color: var(--ink-2); }
-.tabs { display: flex; align-items: flex-end; gap: 2px; overflow-x: auto; max-width: 100%; padding: 6px 6px 0; margin-bottom: -1px; }
-.tabs a { position: relative; display: block; margin-left: -6px; padding: 8px 20px 7px; border: 1px solid var(--folder-back); border-bottom: 0; border-radius: 10px 10px 0 0; background: linear-gradient(var(--folder-tab), var(--folder-deep)); box-shadow: inset 0 -6px 8px -6px rgba(20, 33, 61, .18); text-decoration: none; font-size: 15px; white-space: nowrap; transition: transform .15s; }
-.tabs a:first-child { margin-left: 0; }
-.tabs a:hover { transform: translateY(-2px); }
-.tabs a[aria-current="page"] { z-index: 1; padding-top: 11px; border-color: var(--line); background: var(--paper); box-shadow: 0 -2px 6px rgba(20, 33, 61, .08); font-weight: 700; transform: none; }
+/* 서류철 인덱스 탭: 히어로 종이에 붙어 있어요 */
+.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a { position: relative; z-index: 0; display: block; padding: 9px 26px 8px; color: var(--ink); text-decoration: none; font-size: 15px; white-space: nowrap; transition: transform .15s; }
+.tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
+.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1px solid var(--tab-line); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
+.tabs a:not([aria-current]):hover { transform: translateY(-2px); }
+.tabs a[aria-current="page"] { z-index: 1; margin-bottom: -1px; padding: 13px 30px 9px; font-weight: 700; }
+.tabs a[aria-current="page"]::before { background: var(--sheet); border-color: var(--line); box-shadow: 0 -2px 6px rgba(20, 33, 61, .06); }
+.tabs a[aria-current="page"]::after { inset: -6px -11px 4px 14px; z-index: -2; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
 
 /* 히어로: 지도 위에 길을 그려 나가요 */
-.hero { margin: 28px 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow-2); overflow: hidden;
+.hero { margin: 0 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow-2); overflow: hidden;
   background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 22px 22px; }
 .hero-text { padding: 36px 40px 0; }
 .hero h1 { margin: 0; font-size: clamp(30px, 4.6vw, 48px); line-height: 1.2; letter-spacing: -1.5px; }
@@ -97,7 +105,7 @@ a { color: inherit; }
 .folder:hover .paper, .folder:focus-within .paper { transform: translateY(-8px) rotate(-2deg); }
 .folder:hover .front, .folder:focus-within .front { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), var(--shadow-3); }
 .folder h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 19px; }
-.folder h3 svg { width: 22px; height: 22px; flex: none; }
+.folder h3 .mi { width: 22px; height: 22px; }
 .folder p { margin: 2px 0 12px; font-size: 14px; color: var(--ink-2); }
 .folder a { display: inline-block; padding-top: 10px; border-top: 1px solid rgba(20, 33, 61, .12); width: 100%; font-size: 14px; text-decoration: none; }
 .folder a:hover, .folder a:focus-visible { text-decoration: underline; }
@@ -133,6 +141,11 @@ a { color: inherit; }
 .steps-m { display: none; list-style: none; margin: 0; padding: 12px 20px 20px; gap: 4px; font-size: 14px; counter-reset: s; }
 .steps-m li::before { counter-increment: s; content: counter(s) ". "; font-weight: 700; }
 
+/* 머티리얼 아이콘 (SVG로 넣어요, 이모지는 쓰지 않아요) */
+.mi { width: 24px; height: 24px; flex: none; fill: currentColor; vertical-align: -5px; }
+.mi.red { fill: var(--red); }
+.mi.sm { width: 16px; height: 16px; vertical-align: -3px; }
+
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 @media (max-width: 860px) {
@@ -148,7 +161,8 @@ a { color: inherit; }
   .steps-m { display: grid; }
   .notes { grid-template-columns: 1fr; }
   .folders { gap: 14px; }
-  .folder { padding: 18px 14px 12px; }
+  .folder .front { padding: 16px 14px 12px; }
+  .folder h3 { font-size: 17px; }
 }
 </style>
 </head>
@@ -191,22 +205,22 @@ a { color: inherit; }
       <p class="note" aria-hidden="true">지금,<br>나만의 길을<br>그려 보세요</p>
     </div>
     <ol class="steps-m" aria-hidden="true">
-      <li>직무 알아보기 ✓</li><li>공고 살펴보기</li><li>서류 준비</li><li>지원하기</li>
+      <li>직무 알아보기 <svg class="mi sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></li><li>공고 살펴보기</li><li>서류 준비</li><li>지원하기</li>
     </ol>
   </section>
 
   <section class="sec" aria-labelledby="roles-title">
-    <div class="sec-head"><h2 id="roles-title">📍 어떤 길로 가 볼까요?</h2></div>
+    <div class="sec-head"><h2 id="roles-title"><svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>어떤 길로 가 볼까요?</h2></div>
     <ul class="folders">
-      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>개발</h3><p>코드로 문제를 해결해요</p><a href="roles/index.html#dev">이 길로 가기 →</a></div></li>
-      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1L19 8a2.1 2.1 0 0 0-3-3L5 16l-1 4ZM14 7l3 3"/></svg>디자인</h3><p>더 나은 경험을 만들어요</p><a href="roles/index.html#design">이 길로 가기 →</a></div></li>
-      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V14M10 20V9M16 20v-5M20 4v16"/></svg>PO</h3><p>제품의 방향을 그려요</p><a href="roles/index.html#po">이 길로 가기 →</a></div></li>
-      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l7 4V6L6 10H3ZM17 9a4 4 0 0 1 0 6M19.5 6.5a8 8 0 0 1 0 11"/></svg>마케팅</h3><p>가치를 사람에게 전해요</p><a href="roles/index.html#marketing">이 길로 가기 →</a></div></li>
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>개발</h3><p>코드로 문제를 해결해요</p><a href="roles/index.html#dev">이 길로 가기 →</a></div></li>
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>디자인</h3><p>더 나은 경험을 만들어요</p><a href="roles/index.html#design">이 길로 가기 →</a></div></li>
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>PO</h3><p>제품의 방향을 그려요</p><a href="roles/index.html#po">이 길로 가기 →</a></div></li>
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z"/></svg>마케팅</h3><p>가치를 사람에게 전해요</p><a href="roles/index.html#marketing">이 길로 가기 →</a></div></li>
     </ul>
   </section>
 
   <section class="sec" aria-labelledby="jobs-title">
-    <div class="sec-head"><h2 id="jobs-title">🚩 마감 임박 채용 공고</h2><a class="more" href="jobs/index.html">채용 공고 더 보기 →</a></div>
+    <div class="sec-head"><h2 id="jobs-title"><svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>마감 임박 채용 공고</h2><a class="more" href="jobs/index.html">채용 공고 더 보기 →</a></div>
     <!-- 가상 공고예요. jobs.js가 생기면 그 데이터로 바꿔요 -->
     <ul class="tickets">
       <li><div class="ticket"><div><div class="co">모눈랩</div><h3>프론트엔드 개발자</h3><span class="tag" style="background:var(--dev)">개발</span></div><span class="stub"><span class="dday">D-7</span></span></div></li>
@@ -216,7 +230,7 @@ a { color: inherit; }
   </section>
 
   <section class="sec" aria-labelledby="faq-title">
-    <div class="sec-head"><h2 id="faq-title">📍 자주 묻는 질문</h2><a class="more" href="faq/index.html">더 보기 →</a></div>
+    <div class="sec-head"><h2 id="faq-title"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>자주 묻는 질문</h2><a class="more" href="faq/index.html">더 보기 →</a></div>
     <div class="notes">
       <details><summary>희망 직무를 아직 정하지 못했어요.</summary><p>괜찮아요. 좋아했던 일과 잘했던 경험부터 적어 보고, 직무 사전에서 비슷한 일을 찾아봐요.</p></details>
       <details><summary>관련 경험이 없어도 지원할 수 있나요?</summary><p>네. 작은 개인 프로젝트나 수업 과제도 경험이 돼요. 무엇을 배웠는지 한 줄로 정리해 보세요.</p></details>
