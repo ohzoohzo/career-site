@@ -10,6 +10,10 @@
   --kraft: #d6b88a;
   --kraft-dark: #b8945f;
   --line: #d9d2c2;
+  /* 메뉴 탭 색 (홈 page/home-tabs와 같은 값) */
+  --tab: #EFEBE2;   --tab-deep: #E3DED2;   --tab-line: #D3CCBC;
+  --tab-hover: #F6F3EC;   --tab-shadow: rgba(20, 33, 61, .18);
+  --folder: #F3DFAE;   --folder-deep: #E9CF94;   --folder-back: #DDBF7E;
   --dev: #dbeaf8;   --dev-ink: #1f5d96;
   --des: #dcefe0;   --des-ink: #2b7a45;
   --po:  #dfe3fa;   --po-ink:  #3a47a8;
@@ -36,33 +40,18 @@ header.site .wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justi
 .brand svg { width: 38px; height: 38px; flex: none; }
 .brand b { display: block; font-size: 1.15rem; line-height: 1.2; }
 .brand small { color: var(--ink-soft); font-size: .72rem; }
-/* 메뉴 탭: 서류 폴더 모양 (home.png 느낌) */
-nav.tabs { position: relative; z-index: 0; display: flex; align-items: flex-end; gap: 6px; padding: 0 4px; }
-nav.tabs a {
-  position: relative;
-  text-decoration: none; font-size: .9rem; font-weight: 700;
-  padding: 9px 22px 8px; min-width: 88px; text-align: center;
-  color: var(--navy); white-space: nowrap;
-  background: linear-gradient(var(--paper), var(--paper-2));
-  border: 1px solid var(--line); border-bottom: 0;
-  border-radius: 9px 9px 0 0;
-  box-shadow: inset 0 1px 0 var(--paper), 0 -1px 3px var(--line);
-}
-nav.tabs a:hover { background: var(--paper); }
-/* 지금 보는 탭: 하얗고 높게, 아래 본문 종이와 이어지게 */
-nav.tabs a[aria-current="page"] {
-  background: var(--paper);
-  font-size: 1rem; padding-top: 13px; margin-bottom: -1px;
-  border-color: var(--kraft);
-}
-/* 탭 뒤로 살짝 보이는 노란 폴더 귀퉁이 */
-nav.tabs a[aria-current="page"]::after {
-  content: ""; position: absolute; z-index: -1;
-  top: -4px; right: -5px; width: 40%; height: 70%;
-  background: var(--kraft);
-  border: 1px solid var(--kraft-dark); border-bottom: 0; border-left: 0;
-  border-radius: 0 9px 0 0;
-}
+/* 서류철 인덱스 탭: 홈(page/home-tabs) 탭 코드를 그대로 따라 했어요 */
+nav.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; scrollbar-width: none; }
+nav.tabs::-webkit-scrollbar { display: none; }
+nav.tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; white-space: nowrap; }
+nav.tabs a::before, nav.tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
+nav.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1px solid var(--tab-line); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px var(--tab-shadow); }
+nav.tabs a:not([aria-current]):hover::before, nav.tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(var(--tab-hover), var(--tab)); }
+nav.tabs a[aria-current="page"] { z-index: auto; margin-bottom: -1px; padding: 13px 22px 9px; font-weight: 700; }
+nav.tabs a[aria-current="page"]::before { z-index: 2; background: var(--paper); border-color: var(--line); box-shadow: none; }
+nav.tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
+/* 마닐라(노란) 폴더 탭: 지금 탭 뒤에서 오른쪽 위로 살짝 보여요 */
+nav.tabs a[aria-current="page"]::after { inset: -6px -11px 0 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
 
 /* 제목 */
 .hero { padding: 26px 0 8px; }
@@ -181,9 +170,9 @@ footer.site b { color: var(--ink); }
 @media (max-width: 420px) {
   .chip { padding: 6px 13px; }
   .filters .sep { display: none; }
-  nav.tabs { padding: 0 4px 0 0; gap: 3px; }
-  nav.tabs a { padding: 8px 8px 7px; font-size: .78rem; min-width: 0; }
-  nav.tabs a[aria-current="page"] { padding-top: 11px; font-size: .84rem; }
+  nav.tabs { padding: 12px 12px 0 4px; gap: 2px; }
+  nav.tabs a { padding: 8px 10px 7px; font-size: 13px; }
+  nav.tabs a[aria-current="page"] { padding: 11px 13px 8px; }
   .note .co, .note .ti { padding-right: 0; }
   .note { padding: 38px 22px 52px 24px; }
   .days td { height: 34px; }
