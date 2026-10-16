@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1분 자기소개 연습 · 커리어 길잡이</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 공통 변수 (style.css가 생기면 이 블록은 지우고 style.css를 불러와요) */
+:root {
+  --paper: #FBF9F3;
+  --sheet: #F8F5EE;
+  --ink: #14213D;
+  --ink-2: #4A5570;
+  --line: #E4DED0;
+  --red: #C8313A;
+  --red-bg: #FBE9E9;
+  --folder: #F3DFAE;
+  --folder-deep: #E9CF94;
+  --folder-back: #DDBF7E;
+  --tab: #EFEBE2;
+  --tab-deep: #E3DED2;
+  --tab-line: #D3CCBC;
+  --note: #FFF2A8;
+  --white: #FFFFFF;
+  --dev: #E3EEFB;
+  --design: #E4F2E6;
+  --po: #EDE6FA;
+  --mkt: #FBE6EC;
+  --tape: rgba(255, 255, 255, .55);
+  --age-edge: inset 0 0 22px rgba(140, 100, 30, .16);
+  --shadow-1: 0 1px 2px rgba(20, 33, 61, .08);
+  --shadow-2: 0 1px 2px rgba(20, 33, 61, .06), 0 4px 10px rgba(20, 33, 61, .08);
+  --shadow-3: 0 2px 4px rgba(20, 33, 61, .08), 0 12px 24px rgba(20, 33, 61, .14);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--paper) url("../assets/home/paper.webp") repeat;
+  background-size: 512px 512px;
+  color: var(--ink);
+  font: 16px/1.6 "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  word-break: keep-all;
+}
+a { color: inherit; }
+button, textarea { font: inherit; color: inherit; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+
+/* 헤더 (홈과 같은 모양) */
+.site-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 18px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 12px; }
+.logo b { display: block; font-size: 22px; letter-spacing: -.5px; }
+.logo small { display: block; font-size: 12px; color: var(--ink-2); }
+.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a { position: relative; z-index: 0; display: block; padding: 9px 22px 8px; text-decoration: none; font-size: 15px; white-space: nowrap; transition: transform .15s; }
+.tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
+.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1px solid var(--tab-line); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
+.tabs a:not([aria-current]):hover { transform: translateY(-2px); }
+.tabs a[aria-current="page"] { z-index: 1; margin-bottom: -1px; padding: 13px 26px 9px; font-weight: 700; }
+.tabs a[aria-current="page"]::before { background: var(--sheet); border-color: var(--line); }
+.tabs a[aria-current="page"]::after { inset: -6px -11px 4px 14px; z-index: -2; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
+
+/* 머티리얼 아이콘 */
+.mi { width: 24px; height: 24px; flex: none; fill: currentColor; vertical-align: -5px; }
+.mi.sm { width: 18px; height: 18px; vertical-align: -3px; }
+.mi.red { fill: var(--red); }
+
+/* 제목 */
+.intro { padding: 40px 0 24px; }
+.intro h1 { margin: 0; font-size: clamp(30px, 4.6vw, 44px); line-height: 1.2; letter-spacing: -1.5px; }
+.intro p { margin: 8px 0 0; color: var(--ink-2); font-size: 17px; }
+
+/* 연습 영역: 모래시계 + 쓰기 */
+.practice { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px; margin-bottom: 48px; }
+.card { position: relative; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); }
+
+.timer { display: flex; flex-direction: column; align-items: center; padding: 28px 24px 24px; text-align: center; }
+.choose { display: inline-flex; padding: 4px; gap: 4px; background: var(--tab); border: 1px solid var(--tab-line); border-radius: 99px; }
+.choose button { border: 0; background: none; padding: 6px 18px; border-radius: 99px; cursor: pointer; font-size: 15px; }
+.choose button[aria-pressed="true"] { background: var(--ink); color: var(--white); font-weight: 700; }
+.choose button:focus-visible, .btn:focus-visible, .ghost:focus-visible, .role-tabs button:focus-visible { outline: 3px solid var(--folder-back); outline-offset: 2px; }
+
+/* 모래시계 */
+.glass-box { position: relative; width: 180px; margin: 18px 0 6px; }
+.glass { position: relative; z-index: 1; display: block; width: 100%; height: auto; transform-origin: 50% 50%; }
+.glass.flip { transform: rotate(180deg); transition: transform .8s cubic-bezier(.55, -0.25, .35, 1.25); }
+.floor-shadow { display: block; width: 170px; height: 16px; margin: -10px auto 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(20, 33, 61, .25), transparent); }
+.wood { fill: var(--folder-back); }
+.wood-lite { fill: var(--folder-deep); }
+.hg-glass { fill: url(#glassFill); stroke: var(--ink-2); stroke-opacity: .5; stroke-width: 1.4; }
+.hg-shine { fill: none; stroke: var(--white); stroke-linecap: round; }
+.hg-sand { fill: url(#sandFill); }
+.hg-stream { stroke: var(--folder-back); stroke-width: 1.8; stroke-linecap: round; stroke-dasharray: 2 2.4; animation: pour .16s linear infinite; }
+.hg-grain { fill: var(--folder-back); }
+@keyframes pour { to { stroke-dashoffset: -8.8; } }
+
+.time { font-size: 48px; font-weight: 700; letter-spacing: -1px; font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 8px; }
+.time-label { margin: 2px 0 16px; font-size: 14px; color: var(--ink-2); }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; border: 0; border-radius: 6px; background: var(--ink); color: var(--white); font-weight: 700; cursor: pointer; }
+.btn:disabled { opacity: .45; cursor: default; }
+.ghost { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border: 1px solid var(--tab-line); border-radius: 6px; background: var(--white); cursor: pointer; font-size: 15px; }
+.ghost[aria-pressed="true"] { border-color: var(--ink); font-weight: 500; }
+
+/* 시간 끝 메모지 */
+.done-note { position: absolute; left: 50%; top: 44%; width: 236px; padding: 18px 16px 14px; background: var(--note); box-shadow: var(--shadow-3); transform: translate(-50%, -50%) rotate(-4deg); text-align: center; z-index: 2; }
+.done-note::before { content: ""; position: absolute; left: 50%; top: -10px; width: 70px; height: 20px; margin-left: -35px; background: var(--tape); border: 1px solid rgba(255, 255, 255, .7); box-shadow: var(--shadow-1); transform: rotate(3deg); }
+.done-note strong { display: block; font-size: 22px; color: var(--red); }
+.done-note span { font-size: 14px; color: var(--ink-2); }
+.done-note.pop { animation: stick .35s ease-out; }
+@keyframes stick { from { transform: translate(-50%, -60%) rotate(-10deg) scale(1.15); opacity: 0; } }
+
+/* 쓰기 칸: 원고지 줄 */
+.script { padding: 24px 24px 20px; }
+.script h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 20px; letter-spacing: -.5px; }
+.script h2:focus { outline: none; }
+.sub { margin: 0 0 14px; font-size: 14px; color: var(--ink-2); }
+.lined { background: repeating-linear-gradient(transparent 0 31px, var(--line) 31px 32px), var(--white); background-attachment: local; }
+.field { margin-bottom: 12px; }
+.field label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 15px; font-weight: 500; }
+.field label i { flex: none; display: inline-block; width: 18px; height: 10px; border-radius: 2px; }
+.f1 label i { background: var(--note); }
+.f2 label i { height: 6px; border-bottom: 2px solid var(--red); border-radius: 0; }
+.f3 label i { background: var(--folder); }
+.field textarea { display: block; width: 100%; padding: 0 12px; border: 1px solid var(--line); border-radius: 4px; line-height: 32px; font-size: 16px; resize: vertical; }
+.field textarea::placeholder { color: var(--ink-2); opacity: .6; }
+.field textarea:focus { outline: 3px solid var(--folder-back); outline-offset: 1px; border-color: var(--folder-back); }
+.count { font-size: 14px; font-weight: 500; }
+.manuscript { margin: 0; padding: 0 16px; border: 1px solid var(--line); border-radius: 4px; line-height: 32px; font-size: 16px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 12px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--ink-2); }
+.legend li { display: flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 18px; height: 10px; border-radius: 2px; }
+.legend .k1 { background: var(--note); }
+.legend .k2 { border-bottom: 2px solid var(--red); height: 6px; border-radius: 0; }
+.legend .k3 { background: var(--folder); }
+/* 문장 역할 표시: 나는 누구 · 근거 경험 · 왜 이 직무 */
+.s1 { background: linear-gradient(transparent 55%, var(--note) 55%); }
+.s2 { text-decoration: underline wavy var(--red); text-decoration-thickness: 1px; text-underline-offset: 5px; }
+.s3 { background: linear-gradient(transparent 55%, var(--folder) 55%); font-weight: 500; }
+.script-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.script-foot .sub { margin: 0; }
+
+/* 사례 */
+.sec { margin: 0 0 48px; }
+.sec-head { border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.sec h2 { display: flex; align-items: center; gap: 8px; margin: 0; padding-bottom: 8px; font-size: 22px; letter-spacing: -.5px; }
+.sec-head p { margin: 0 0 10px; font-size: 15px; color: var(--ink-2); }
+.role-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.role-tabs button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 18px; border: 1px solid var(--tab-line); border-radius: 99px; background: var(--white); cursor: pointer; font-size: 15px; }
+.role-tabs button[aria-selected="true"] { border-color: var(--ink); font-weight: 700; box-shadow: var(--shadow-1); }
+.role-tabs button[data-role="dev"][aria-selected="true"] { background: var(--dev); }
+.role-tabs button[data-role="design"][aria-selected="true"] { background: var(--design); }
+.role-tabs button[data-role="po"][aria-selected="true"] { background: var(--po); }
+.role-tabs button[data-role="mkt"][aria-selected="true"] { background: var(--mkt); }
+
+.example { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); overflow: hidden; }
+.example .body { padding: 24px; }
+.example .meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; font-size: 14px; color: var(--ink-2); }
+.tag { display: inline-block; padding: 1px 10px; border-radius: 99px; font-size: 14px; color: var(--ink); }
+.example h3 { margin: 0 0 12px; font-size: 19px; }
+.why { padding: 24px; border-left: 2px dashed var(--line); background: rgba(255, 255, 255, .4); }
+.why h4 { margin: 0 0 8px; font-size: 16px; }
+.why ul { margin: 0 0 16px; padding-left: 18px; font-size: 15px; color: var(--ink-2); }
+.why li + li { margin-top: 6px; }
+
+.site-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 18px 0 28px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+.site-foot b { color: var(--ink); font-size: 15px; }
+
+@media (max-width: 860px) {
+  .practice { grid-template-columns: 1fr; }
+  .example { grid-template-columns: 1fr; }
+  .why { border-left: 0; border-top: 2px dashed var(--line); }
+}
+@media (max-width: 560px) {
+  .intro { padding: 28px 0 18px; }
+  .script, .example .body, .why { padding: 18px 16px; }
+  .glass-box { width: 156px; }
+  .floor-shadow { width: 146px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass.flip { transition: none; }
+  .hg-stream, .done-note.pop { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="wrap site-head">
+  <a class="logo" href="../index.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="#C8313A" stroke-width="3"/><path d="M27 13 22 22 13 27 18 18Z" fill="#C8313A"/></svg>
+    <span><b>커리어 길잡이</b><small>좋은 시작이, 좋은 커리어를 만듭니다.</small></span>
+  </a>
+  <nav class="tabs" aria-label="주 메뉴">
+    <a href="../index.html">홈</a>
+    <a href="../roles/index.html">직무 사전</a>
+    <a href="../jobs/index.html">채용 공고</a>
+    <a href="../faq/index.html">자주 묻는 질문</a>
+    <a href="index.html" aria-current="page">1분 자기소개</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="intro" aria-labelledby="page-title">
+    <h1 id="page-title">1분 자기소개 연습</h1>
+    <p>내 소개를 세 문장으로 써 보고, 모래시계를 뒤집어 소리 내어 말해 보세요.</p>
+  </section>
+
+  <section class="practice" id="practice" aria-label="연습하기">
+    <div class="card timer">
+      <div class="choose" role="group" aria-label="연습 시간 고르기">
+        <button type="button" data-sec="30" aria-pressed="false">30초</button>
+        <button type="button" data-sec="60" aria-pressed="true">1분</button>
+      </div>
+
+      <div class="glass-box">
+        <svg class="glass" id="glass" viewBox="0 0 160 260" role="img" aria-label="모래시계">
+          <defs>
+            <clipPath id="bulb"><path d="M34 28H126C126 86 86 112 83 130C86 148 126 174 126 232H34C34 174 74 148 77 130C74 112 34 86 34 28Z"/></clipPath>
+            <linearGradient id="capShade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" style="stop-color:var(--white);stop-opacity:.55"/>
+              <stop offset=".35" style="stop-color:var(--white);stop-opacity:0"/>
+              <stop offset="1" style="stop-color:var(--ink);stop-opacity:.32"/>
+            </linearGradient>
+            <linearGradient id="postShade" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" style="stop-color:var(--ink);stop-opacity:.35"/>
+              <stop offset=".38" style="stop-color:var(--white);stop-opacity:.45"/>
+              <stop offset="1" style="stop-color:var(--ink);stop-opacity:.4"/>
+            </linearGradient>
+            <linearGradient id="glassFill" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" style="stop-color:var(--white);stop-opacity:.75"/>
+              <stop offset=".5" style="stop-color:var(--white);stop-opacity:.2"/>
+              <stop offset="1" style="stop-color:var(--white);stop-opacity:.6"/>
+            </linearGradient>
+            <linearGradient id="sandFill" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" style="stop-color:var(--folder-back)"/>
+              <stop offset=".45" style="stop-color:var(--folder-deep)"/>
+              <stop offset="1" style="stop-color:var(--folder-back)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- 기둥 -->
+          <g>
+            <rect class="wood" x="18" y="26" width="8" height="208" rx="3"/>
+            <rect x="18" y="26" width="8" height="208" rx="3" fill="url(#postShade)"/>
+            <ellipse class="wood" cx="22" cy="46" rx="6.5" ry="4"/><ellipse cx="22" cy="46" rx="6.5" ry="4" fill="url(#postShade)"/>
+            <ellipse class="wood" cx="22" cy="130" rx="6.5" ry="5"/><ellipse cx="22" cy="130" rx="6.5" ry="5" fill="url(#postShade)"/>
+            <ellipse class="wood" cx="22" cy="214" rx="6.5" ry="4"/><ellipse cx="22" cy="214" rx="6.5" ry="4" fill="url(#postShade)"/>
+            <rect class="wood" x="134" y="26" width="8" height="208" rx="3"/>
+            <rect x="134" y="26" width="8" height="208" rx="3" fill="url(#postShade)"/>
+            <ellipse class="wood" cx="138" cy="46" rx="6.5" ry="4"/><ellipse cx="138" cy="46" rx="6.5" ry="4" fill="url(#postShade)"/>
+            <ellipse class="wood" cx="138" cy="130" rx="6.5" ry="5"/><ellipse cx="138" cy="130" rx="6.5" ry="5" fill="url(#postShade)"/>
+            <ellipse class="wood" cx="138" cy="214" rx="6.5" ry="4"/><ellipse cx="138" cy="214" rx="6.5" ry="4" fill="url(#postShade)"/>
+          </g>
+
+          <!-- 유리 -->
+          <path class="hg-glass" d="M34 28H126C126 86 86 112 83 130C86 148 126 174 126 232H34C34 174 74 148 77 130C74 112 34 86 34 28Z"/>
+          <g clip-path="url(#bulb)">
+            <path class="hg-sand" id="sandTop" d=""/>
+            <path class="hg-sand" id="sandBot" d=""/>
+          </g>
+          <line class="hg-stream" id="stream" x1="80" y1="130" x2="80" y2="200" hidden/>
+          <g id="grains"></g>
+          <!-- 유리 반짝임 -->
+          <path class="hg-shine" d="M42 36C42 78 62 102 72 118" stroke-width="3" stroke-opacity=".85"/>
+          <path class="hg-shine" d="M118 44C116 70 104 90 94 104" stroke-width="1.5" stroke-opacity=".6"/>
+          <path class="hg-shine" d="M42 224C42 184 60 160 71 143" stroke-width="2.5" stroke-opacity=".6"/>
+
+          <!-- 위아래 나무 받침 -->
+          <rect class="wood" x="8" y="6" width="144" height="20" rx="5"/>
+          <rect x="8" y="6" width="144" height="20" rx="5" fill="url(#capShade)"/>
+          <rect class="wood-lite" x="16" y="24" width="128" height="5" rx="2"/>
+          <rect class="wood" x="8" y="234" width="144" height="20" rx="5"/>
+          <rect x="8" y="234" width="144" height="20" rx="5" fill="url(#capShade)"/>
+          <rect class="wood-lite" x="16" y="231" width="128" height="5" rx="2"/>
+        </svg>
+        <span class="floor-shadow" aria-hidden="true"></span>
+        <div class="done-note" id="doneNote" role="status" hidden>
+          <strong>시간 끝났습니다!</strong>
+          <span>어디까지 말했는지 떠올려 보세요.</span>
+        </div>
+      </div>
+
+      <div class="time" id="time" aria-hidden="true">1:00</div>
+      <p class="time-label" id="timeLabel">남은 시간</p>
+
+      <div class="actions">
+        <button type="button" class="btn" id="startBtn">
+          <svg class="mi sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6z"/></svg>
+          <span>뒤집어서 시작</span>
+        </button>
+        <button type="button" class="ghost" id="resetBtn">
+          <svg class="mi sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          다시 하기
+        </button>
+        <button type="button" class="ghost" id="soundBtn" aria-pressed="false">
+          <svg class="mi sm" id="soundOff" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.910 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.690-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+          <svg class="mi sm" id="soundOn" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span id="soundText">끝날 때 소리 꺼짐</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card script">
+      <!-- 내 자기소개 쓰기 -->
+      <div id="writeView">
+        <h2 id="writeTitle" tabindex="-1">
+          <svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          내 1분 자기소개 쓰기
+        </h2>
+        <p class="sub">세 칸만 채우면 완성이에요. 다 쓰면 모래시계를 뒤집고 소리 내어 읽어 보세요.</p>
+        <div class="field f1">
+          <label for="w1"><i aria-hidden="true"></i>1. 나는 어떤 사람인가요?</label>
+          <textarea class="lined" id="w1" rows="2" placeholder="예) 작은 불편을 코드로 줄이는 걸 좋아하는 지원자입니다."></textarea>
+        </div>
+        <div class="field f2">
+          <label for="w2"><i aria-hidden="true"></i>2. 그걸 보여 주는 경험 하나 (숫자나 장면과 함께)</label>
+          <textarea class="lined" id="w2" rows="4" placeholder="예) 동아리 출석 집계를 웹 페이지로 바꿔, 30분 걸리던 일을 5분으로 줄였습니다."></textarea>
+        </div>
+        <div class="field f3">
+          <label for="w3"><i aria-hidden="true"></i>3. 왜 이 직무·회사에서 일하고 싶나요?</label>
+          <textarea class="lined" id="w3" rows="2" placeholder="예) 사용자의 작은 불편부터 해결하는 개발자가 되겠습니다."></textarea>
+        </div>
+        <div class="script-foot">
+          <span class="count" id="count">지금 0자</span>
+          <span class="sub">쓴 내용은 이 브라우저에만 저장돼요.</span>
+        </div>
+      </div>
+
+      <!-- 사례 보며 연습 -->
+      <div id="exampleView" hidden>
+        <h2 id="exTitle" tabindex="-1">
+          <svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>
+          <span id="exHeading"></span>
+        </h2>
+        <p class="sub" id="exSub"></p>
+        <p class="manuscript lined" id="exBody"></p>
+        <ul class="legend" aria-label="표시 설명">
+          <li><i class="k1"></i>나는 누구</li>
+          <li><i class="k2"></i>근거 경험</li>
+          <li><i class="k3"></i>왜 이 직무</li>
+        </ul>
+        <div class="script-foot">
+          <span class="sub">소리 내어 읽은 다음, 내 이야기로 바꿔 써 보세요.</span>
+          <button type="button" class="ghost" id="backWrite">
+            <svg class="mi sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            내 자기소개 쓰러 가기
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="ex-title">
+    <div class="sec-head">
+      <h2 id="ex-title">
+        <svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>
+        직군별 잘된 사례
+      </h2>
+      <p>가상의 지원자가 쓴 예시예요. 구조를 보고 내 이야기로 바꿔 보세요.</p>
+    </div>
+    <div class="role-tabs" role="tablist" aria-label="직군 고르기" id="roleTabs"></div>
+    <div id="examplePanel" role="tabpanel"></div>
+  </section>
+</main>
+
+<footer class="wrap site-foot">
+  <span><b>커리어 길잡이</b> · 좋은 시작이, 좋은 커리어를 만듭니다.</span>
+  <span>지금도, 더 나은 내일을 준비하는 모든 사람의 곁에.</span>
+</footer>
+
+<script>
+/* ---------- 사례 데이터 (모두 가상이에요) ---------- */
+const ROLES = [
+  { id: 'dev', name: '개발', color: 'var(--dev)',
+    icon: 'M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z',
+    apply: '모눈랩 · 프론트엔드 개발자',
+    title: '불편을 코드로 줄이는 사람',
+    parts: [
+      '안녕하세요, 작은 불편을 코드로 줄이는 걸 좋아하는 지원자입니다.',
+      '동아리에서 매주 손으로 하던 출석 집계를 웹 페이지로 바꿔, 집계 시간을 30분에서 5분으로 줄였습니다. 부원들 의견을 받아 세 번 고치면서, 좋은 코드는 쓰는 사람이 편한 코드라는 걸 배웠습니다.',
+      '모눈랩에서도 사용자가 느끼는 작은 불편부터 찾아 해결하는 프론트엔드 개발자가 되겠습니다.'
+    ],
+    good: ['첫 문장에 "어떤 개발자인지"가 바로 나와요.', '전과 후를 숫자(30분 → 5분)로 보여 줘요.', '경험에서 배운 점이 마지막 다짐과 이어져요.'] },
+  { id: 'design', name: '디자인', color: 'var(--design)',
+    icon: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',
+    apply: '여백스튜디오 · 주니어 프로덕트 디자이너',
+    title: '관찰에서 시작하는 사람',
+    parts: [
+      '안녕하세요, 관찰에서 디자인을 시작하는 지원자입니다.',
+      '학교 도서관 좌석 예약 화면에서 친구들이 같은 곳에서 자꾸 멈추는 걸 보고, 다섯 명을 인터뷰해 화면 흐름을 다시 그렸습니다. 바꾼 시안으로 다시 시험해 보니 예약을 끝까지 마친 사람이 다섯 명 중 두 명에서 다섯 명으로 늘었습니다.',
+      '여백스튜디오에서도 사용자가 멈칫하는 순간을 먼저 찾아내는 디자이너가 되겠습니다.'
+    ],
+    good: ['"예쁘게"가 아니라 "문제를 찾는 방식"을 보여 줘요.', '인터뷰 → 시안 → 다시 시험의 과정이 짧게 담겨 있어요.', '작은 규모라도 결과를 숫자로 말해요.'] },
+  { id: 'po', name: 'PO', color: 'var(--po)',
+    icon: 'M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z',
+    apply: '한걸음컴퍼니 · 주니어 PO',
+    title: '무엇보다 왜를 먼저 묻는 사람',
+    parts: [
+      '안녕하세요, 근거를 모아 우선순위를 정하는 지원자입니다.',
+      '교내 중고거래 앱 프로젝트에서 기능 아이디어가 열 개 넘게 나왔을 때, 60명 설문 결과를 바탕으로 "거래 장소 추천" 하나에 먼저 집중하자고 팀을 설득했습니다. 출시 한 달 뒤, 약속을 잡고도 거래가 취소되는 일이 눈에 띄게 줄었습니다.',
+      '한걸음컴퍼니에서도 무엇을 만들지보다 왜 만드는지를 먼저 묻는 PO가 되겠습니다.'
+    ],
+    good: ['여러 선택지 중 하나를 고른 "판단"이 드러나요.', '설득의 근거(설문 60명)가 구체적이에요.', 'PO가 하는 일을 한 문장 다짐으로 정리했어요.'] },
+  { id: 'mkt', name: '마케팅', color: 'var(--mkt)',
+    icon: 'M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.010 1.5-3.34z',
+    apply: '다음페이지 · 콘텐츠 마케터',
+    title: '사람이 멈춰 서는 이유를 찾는 사람',
+    parts: [
+      '안녕하세요, 사람들이 왜 멈춰서 보는지 궁금해하는 지원자입니다.',
+      '동네 책방 SNS를 석 달 동안 맡아, 책 표지 사진 대신 손님이 남긴 한 줄 메모를 소개하는 방식으로 바꿨습니다. 게시물당 저장 수가 평균 4개에서 25개로 늘었고, 메모를 보고 찾아왔다는 손님도 생겼습니다.',
+      '다음페이지에서도 숫자와 사람 이야기를 함께 보는 콘텐츠 마케터가 되겠습니다.'
+    ],
+    good: ['무엇을 바꿨는지(표지 → 손님 메모)가 한눈에 보여요.', '숫자 결과와 사람 반응을 같이 말해요.', '마지막 문장이 자기 강점을 한 번 더 정리해 줘요.'] }
+];
+
+const $ = (id) => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+/* ---------- 직군 탭과 사례 ---------- */
+let currentRole = ROLES[0].id;
+const partsHTML = (r) => r.parts.map((t, i) => `<span class="s${i + 1}">${t}</span>`).join(' ');
+function renderTabs() {
+  $('roleTabs').innerHTML = ROLES.map(r => `
+    <button type="button" role="tab" id="tab-${r.id}" data-role="${r.id}" aria-controls="examplePanel" aria-selected="${r.id === currentRole}" tabindex="${r.id === currentRole ? 0 : -1}">
+      <svg class="mi sm" viewBox="0 0 24 24" aria-hidden="true"><path d="${r.icon}"/></svg>${r.name}
+    </button>`).join('');
+}
+function renderExample() {
+  const r = ROLES.find(x => x.id === currentRole);
+  $('examplePanel').setAttribute('aria-labelledby', 'tab-' + r.id);
+  $('examplePanel').innerHTML = `
+    <article class="card example">
+      <div class="body">
+        <div class="meta"><span class="tag" style="background:${r.color}">${r.name}</span>지원: ${r.apply}</div>
+        <h3>${r.title}</h3>
+        <p class="manuscript lined">${partsHTML(r)}</p>
+      </div>
+      <div class="why">
+        <h4>이래서 잘됐어요</h4>
+        <ul>${r.good.map(g => `<li>${g}</li>`).join('')}</ul>
+        <button type="button" class="btn" data-use="${r.id}">
+          <svg class="mi sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6z"/></svg>
+          이 사례로 연습하기
+        </button>
+      </div>
+    </article>`;
+}
+function selectRole(id) { currentRole = id; renderTabs(); renderExample(); $('tab-' + id).focus(); }
+$('roleTabs').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-role]');
+  if (b) selectRole(b.dataset.role);
+});
+$('roleTabs').addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  const i = ROLES.findIndex(r => r.id === currentRole);
+  selectRole(ROLES[(i + (e.key === 'ArrowRight' ? 1 : -1) + ROLES.length) % ROLES.length].id);
+});
+
+/* 사례로 연습하기 ↔ 내 자기소개 쓰기 */
+$('examplePanel').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-use]');
+  if (!b) return;
+  const r = ROLES.find(x => x.id === b.dataset.use);
+  $('exHeading').textContent = `${r.name} 사례로 연습해요`;
+  $('exSub').textContent = `지원: ${r.apply}`;
+  $('exBody').innerHTML = partsHTML(r);
+  $('writeView').hidden = true;
+  $('exampleView').hidden = false;
+  resetTimer();
+  $('practice').scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth' });
+  $('exTitle').focus({ preventScroll: true });
+});
+$('backWrite').addEventListener('click', () => {
+  $('exampleView').hidden = true;
+  $('writeView').hidden = false;
+  $('writeTitle').focus();
+});
+
+/* 내 자기소개: 글자 수 + 이 브라우저에 임시 저장 */
+const KEY = 'career-site:interview:intro';
+const fields = ['w1', 'w2', 'w3'].map($);
+function updateCount() {
+  const n = fields.map(f => f.value.trim()).join(' ').trim().length;
+  $('count').textContent = `지금 ${n}자`;
+}
+try {
+  const saved = JSON.parse(localStorage.getItem(KEY) || '[]');
+  fields.forEach((f, i) => { if (saved[i]) f.value = saved[i]; });
+} catch (e) {}
+fields.forEach(f => f.addEventListener('input', () => {
+  updateCount();
+  try { localStorage.setItem(KEY, JSON.stringify(fields.map(x => x.value))); } catch (e) {}
+}));
+updateCount();
+
+/* ---------- 모래시계 ---------- */
+const NECK = 130;
+let duration = 60, raf = 0, endAt = 0, running = false, soundOn = false, peakY = 232;
+
+/* p: 지난 시간 비율 0(시작, 모래가 모두 위) ~ 1(끝, 모래가 모두 아래) */
+function setSand(p) {
+  p = Math.min(1, Math.max(0, p));
+  /* 위쪽: 표면이 내려가면서 가운데가 깔때기처럼 움푹 파여요 */
+  const topY = 54 + 76 * p;
+  if (topY >= NECK - 1) {
+    $('sandTop').setAttribute('d', '');
+  } else {
+    const dip = Math.min(9, (NECK - topY) * 0.55);
+    const w = 14 + 16 * (1 - p);
+    $('sandTop').setAttribute('d',
+      `M0 ${topY} L${80 - w} ${topY} Q80 ${topY + dip * 2} ${80 + w} ${topY} L160 ${topY} L160 ${NECK + 1} L0 ${NECK + 1} Z`);
+  }
+  /* 아래쪽: 가운데가 봉긋한 모래 더미가 쌓여요 */
+  const edgeY = 232 - 44 * p;
+  peakY = edgeY - 18 * Math.min(1, p * 6);
+  $('sandBot').setAttribute('d', p <= 0 ? '' :
+    `M0 233 L0 ${edgeY} Q44 ${edgeY} 80 ${peakY} Q116 ${edgeY} 160 ${edgeY} L160 233 Z`);
+  $('stream').setAttribute('y2', peakY);
+}
+
+/* 모래알: 목에서 떨어져 더미 위로 쏟아져요 */
+const SVGNS = 'http://www.w3.org/2000/svg';
+const grains = [];
+for (let i = 0; i < 46; i++) {
+  const c = document.createElementNS(SVGNS, 'circle');
+  c.setAttribute('class', 'hg-grain');
+  c.setAttribute('r', (0.7 + Math.random() * 0.7).toFixed(2));
+  c.style.display = 'none';
+  $('grains').appendChild(c);
+  grains.push({ el: c, on: false, x: 80, y: NECK, vx: 0, vy: 0 });
+}
+function stepGrains(spawn) {
+  let n = spawn ? 2 : 0;
+  for (const g of grains) {
+    if (!g.on && n > 0) {
+      Object.assign(g, { on: true, x: 80 + (Math.random() - .5) * 2.6, y: NECK + 1, vx: (Math.random() - .5) * .18, vy: .8 + Math.random() * .6 });
+      g.el.style.display = '';
+      n--;
+    }
+    if (!g.on) continue;
+    g.vy += .32; g.y += g.vy; g.x += g.vx;
+    if (g.y >= peakY - 1) {
+      /* 더미에 닿으면 옆으로 살짝 튀었다 사라져요 */
+      g.on = false; g.el.style.display = 'none';
+      continue;
+    }
+    g.el.setAttribute('cx', g.x.toFixed(2));
+    g.el.setAttribute('cy', g.y.toFixed(2));
+  }
+}
+function clearGrains() { grains.forEach(g => { g.on = false; g.el.style.display = 'none'; }); }
+
+const fmt = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+const showTime = (sec) => { $('time').textContent = fmt(sec); };
+
+function tick(now) {
+  const total = duration * 1000;
+  const rem = Math.max(0, endAt - now);
+  const p = 1 - rem / total;
+  setSand(p);
+  if (!reduce.matches) stepGrains(p < .985);
+  showTime(Math.ceil(rem / 1000));
+  if (rem <= 0) return finish();
+  raf = requestAnimationFrame(tick);
+}
+function run() {
+  running = true;
+  $('stream').hidden = false;
+  endAt = performance.now() + duration * 1000;
+  raf = requestAnimationFrame(tick);
+}
+function start() {
+  if (running) return;
+  $('doneNote').hidden = true;
+  $('startBtn').disabled = true;
+  $('timeLabel').textContent = '말하는 중…';
+  const g = $('glass');
+  if (reduce.matches) { setSand(0); run(); return; }
+  /* 아래에 쌓인 모래를 뒤집어 위로 올려요 */
+  g.classList.add('flip');
+  g.addEventListener('transitionend', function done() {
+    g.removeEventListener('transitionend', done);
+    g.style.transition = 'none';
+    g.classList.remove('flip');
+    setSand(0);
+    void g.getBoundingClientRect();
+    g.style.transition = '';
+    run();
+  });
+}
+function finish() {
+  running = false;
+  cancelAnimationFrame(raf);
+  $('stream').hidden = true;
+  clearGrains();
+  setSand(1);
+  showTime(0);
+  $('timeLabel').textContent = '끝!';
+  $('startBtn').disabled = false;
+  $('startBtn').querySelector('span').textContent = '한 번 더';
+  const n = $('doneNote');
+  n.hidden = false; n.classList.remove('pop'); void n.offsetWidth; n.classList.add('pop');
+  if (soundOn) ding();
+}
+function resetTimer() {
+  running = false;
+  cancelAnimationFrame(raf);
+  const g = $('glass'); g.style.transition = 'none'; g.classList.remove('flip'); void g.getBoundingClientRect(); g.style.transition = '';
+  $('stream').hidden = true;
+  clearGrains();
+  setSand(1);
+  showTime(duration);
+  $('doneNote').hidden = true;
+  $('timeLabel').textContent = '남은 시간';
+  $('startBtn').disabled = false;
+  $('startBtn').querySelector('span').textContent = '뒤집어서 시작';
+}
+
+document.querySelectorAll('.choose button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.choose button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  duration = Number(b.dataset.sec);
+  resetTimer();
+}));
+$('startBtn').addEventListener('click', start);
+$('resetBtn').addEventListener('click', resetTimer);
+
+/* 끝날 때 소리 (기본은 꺼져 있어요) */
+let audio;
+$('soundBtn').addEventListener('click', () => {
+  soundOn = !soundOn;
+  $('soundBtn').setAttribute('aria-pressed', soundOn);
+  $('soundText').textContent = soundOn ? '끝날 때 소리 켜짐' : '끝날 때 소리 꺼짐';
+  $('soundOn').hidden = !soundOn; $('soundOff').hidden = soundOn;
+  if (soundOn && !audio) { try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+});
+function ding() {
+  if (!audio) return;
+  [0, 0.28].forEach(t => {
+    const o = audio.createOscillator(), v = audio.createGain();
+    o.frequency.value = 880; o.connect(v); v.connect(audio.destination);
+    const s = audio.currentTime + t;
+    v.gain.setValueAtTime(0.0001, s);
+    v.gain.exponentialRampToValueAtTime(0.25, s + 0.02);
+    v.gain.exponentialRampToValueAtTime(0.0001, s + 0.25);
+    o.start(s); o.stop(s + 0.26);
+  });
+}
+
+renderTabs(); renderExample(); resetTimer();
+</script>
+</body>
+</html>
