@@ -24,3 +24,6 @@
 | 페이지 | 시안 |
 |---|---|
 | 홈 (여정의 시작) | [docs/mockups/home.png](docs/mockups/home.png) |
+| 직무 사전 (직업 카드 아카이브) | [docs/mockups/roles.png](docs/mockups/roles.png) |
+| 채용 공고 (기회의 게시판) | [docs/mockups/jobs.png](docs/mockups/jobs.png) |
+| 자주 묻는 질문 (궁금증 메모함) | [docs/mockups/faq.png](docs/mockups/faq.png) |
