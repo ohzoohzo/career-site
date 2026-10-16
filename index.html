@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>커리어 길잡이</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 공통 style.css가 생기면 아래 색 변수는 그쪽으로 옮겨요 */
+:root {
+  --paper: #FBFAF7;
+  --sheet: #F8F7F2;
+  --grid: rgba(20, 33, 61, .06);
+  --ink: #14213D;
+  --ink-2: #4A5570;
+  --line: #E4DED0;
+  --red: #C8313A;
+  --red-bg: #FBE9E9;
+  --folder: #F3DFAE;
+  --folder-deep: #E9CF94;
+  --folder-back: #DDBF7E;
+  --folder-tab: #EBD39A;
+  --tab: #EFEBE2;
+  --tab-deep: #E3DED2;
+  --tab-line: #D3CCBC;
+  --note: #FFF2A8;
+  --white: #FFFFFF;
+  --dev: #E3EEFB;
+  --design: #E4F2E6;
+  --po: #EDE6FA;
+  --mkt: #FBE6EC;
+  --tape: rgba(255, 255, 255, .55);
+  /* 낡은 종이 질감: 결(grain) · 얼룩(blotch) · 바랜 잉크 마스크(ink) · 가장자리 바램(age) */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .28 0 0 0 0 .16 .2 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
+  --blotch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .4 0 0 0 0 .15 .22 0 0 0 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23b%29'/%3E%3C/svg%3E");
+  --ink-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.15'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23m%29'/%3E%3C/svg%3E");
+  --age-edge: inset 0 0 22px rgba(140, 100, 30, .1);
+  /* 종이 그림자 3단계: 바닥에 놓인 종이 · 겹친 종이 · 들린 종이 */
+  /* 번짐 없는 단색 그림자: 오려 붙인 종이처럼 또렷하게 */
+  --shade: rgba(20, 33, 61, .5);
+  /* 종이 물건 윤곽선: 가장자리 모양을 따라가도록 drop-shadow로 그려요 */
+  --outline: drop-shadow(0 0 .9px rgba(20, 33, 61, .8));
+  --ring: 0 0 0 1px rgba(20, 33, 61, .38);
+  --line-ink: rgba(20, 33, 61, .55);
+  --shadow-1: 2px 2px 0 var(--shade);
+  --shadow-2: 4px 4px 0 var(--shade);
+  --shadow-3: 8px 8px 0 rgba(20, 33, 61, .58);
+  --ink-deep: #0A1226;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper) url("assets/home/paper.webp") repeat;
+  background-size: 512px 512px;
+  color: var(--ink);
+  font: 16px/1.6 "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  word-break: keep-all;
+}
+a { color: inherit; }
+/* 가운데 정렬: 콘텐츠 최대 690px, 양옆 여백은 화면에 따라 20~80px */
+:root { --gutter: clamp(20px, 6vw, 80px); }
+.wrap { max-width: calc(690px + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* 헤더 */
+.site-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 18px; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 12px; }
+.logo svg { flex: none; }
+.logo b { display: block; font-size: 20px; letter-spacing: -.5px; }
+/* 서류철 인덱스 탭: 히어로 종이에 붙어 있어요 */
+.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; margin-bottom: -6px; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500; white-space: nowrap; }
+.tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
+.tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1.5px solid var(--line-ink); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
+.tabs a:not([aria-current]):hover::before, .tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(#F6F3EC, var(--tab)); }
+.tabs a[aria-current="page"] { z-index: auto; margin-bottom: 4.5px; padding: 13px 22px 9px; font-weight: 700; }
+.tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line-ink); box-shadow: none; }
+.tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
+/* 마닐라 탭: 다른 탭보다 앞, 히어로 종이보다 뒤 (아래쪽은 종이 뒤로 끼워져요) */
+.tabs a[aria-current="page"]::after { inset: -6px -11px -8px 14px; z-index: 1; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1.5px solid var(--line-ink); border-bottom-width: 0; }
+
+/* 히어로: 지도 위에 길을 그려 나가요 */
+.hero { position: relative; z-index: 1; margin: 0 0 36px; background: var(--sheet); border: 1.5px solid var(--line-ink); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); overflow: hidden;
+  background-image: var(--blotch), var(--grain), linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 420px 420px, 180px 180px, 22px 22px, 22px 22px; }
+.hero-text { padding: 36px 40px 0; }
+.hero h1 { margin: 0; font-size: clamp(30px, 4.6vw, 48px); line-height: 1.2; letter-spacing: -1.5px; }
+.hero p { margin: 10px 0 20px; color: var(--ink-2); font-size: 17px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 6px; background: var(--ink); color: var(--white); text-decoration: none; font-weight: 700;
+  box-shadow: 0 3px 0 var(--ink-deep), 4px 6px 0 var(--shade); transition: transform .12s, box-shadow .12s; }
+.btn:hover { transform: translate(-2px, -3px); box-shadow: 0 6px 0 var(--ink-deep), 8px 11px 0 rgba(20, 33, 61, .58); }
+.btn:active { transform: translate(2px, 3px); box-shadow: 0 0 0 var(--ink-deep), 1px 2px 0 var(--shade); }
+.btn:focus-visible { outline: 3px solid var(--folder); outline-offset: 3px; }
+
+.map { position: relative; container-type: inline-size; aspect-ratio: 1600 / 426; margin-top: 12px; }
+.map > img { position: absolute; }
+.map > img:not(.deco) { inset: 0; width: 100%; height: 100%; }
+/* 지도 그림 위에도 같은 얼룩·결을 덮어 윗부분 종이와 맞춰요 */
+.map::after { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--blotch), var(--grain); background-size: 420px 420px, 180px 180px; mix-blend-mode: multiply; pointer-events: none; }
+.map > img:not(:first-child), .map .stamp, .map .pins li { z-index: 1; }
+.pencil { width: 11%; right: 0; top: 0; }
+.flag { width: 12.5%; left: 79%; top: 4%; }
+.compass { width: 9%; right: 3%; bottom: 6%; }
+.stamp { position: absolute; left: 4%; top: 72%; transform: rotate(-8deg); padding: 4px 14px; border: 2px solid var(--red); border-radius: 50%; color: var(--red); font-weight: 700; font-size: clamp(10px, 2cqw, 18px); white-space: nowrap; opacity: .9; -webkit-mask: var(--ink-mask); mask: var(--ink-mask); }
+.pins { list-style: none; margin: 0; padding: 0; }
+.pins li { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; }
+.pins svg { width: clamp(14px, 2.6cqw, 28px); height: auto; }
+.pins span { position: absolute; top: 100%; margin-top: 4px; white-space: nowrap; font-size: clamp(11px, 1.7cqw, 15px); background: var(--sheet); padding: 0 4px; }
+.pins .done span { font-weight: 700; }
+.pins .todo span { color: var(--ink-2); }
+.pins .todo svg path:first-child { fill: #5B6680; }
+.pins .last span { top: 30%; right: 100%; margin: 0 6px 0 0; }
+
+/* 첫 화면 한 번: 길이 왼쪽부터 그려지고, 핀·깃발이 차례로 찍혀요 */
+@keyframes draw-route { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes drop-pin { from { opacity: 0; translate: 0 -10px; } to { opacity: 1; translate: 0 0; } }
+/* 길은 지도 폭 15%→97%를 1.8초 동안 일정한 속도로 그려요. 핀은 길이 닿는 순간 찍혀요 */
+.map .route { animation: draw-route 1.8s linear .3s both; }
+.map .pins li, .map .flag, .map .pencil { animation: drop-pin .35s ease-out both; }
+.map .pins li:nth-child(1) { animation-delay: .7s; }
+.map .pins li:nth-child(2) { animation-delay: 1.07s; }
+.map .pins li:nth-child(3) { animation-delay: 1.42s; }
+.map .pins li:nth-child(4) { animation-delay: 1.77s; }
+.map .flag { animation-delay: 1.85s; }
+.map .pencil { animation-delay: 2.1s; }
+@media (prefers-reduced-motion: reduce) {
+  .map .route, .map .pins li, .map .flag, .map .pencil { animation: none; }
+  .btn, .tickets li, .folder .paper { transition: none; }
+}
+
+/* 섹션 공통 */
+.sec { margin: 0 0 40px; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.sec h2 { display: flex; align-items: center; gap: 8px; margin: 0; padding-bottom: 8px; font-size: 22px; letter-spacing: -.5px; }
+.more { font-size: 14px; color: var(--ink-2); }
+
+/* 직군 폴더 */
+.folders { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
+.folder { position: relative; display: flex; flex-direction: column; padding-top: 24px; margin-top: 14px; isolation: isolate; filter: var(--outline) drop-shadow(4px 4px 0 var(--shade)); transition: transform .15s, filter .15s; }
+.folder:hover, .folder:focus-within { transform: translate(-2px, -2px); filter: var(--outline) drop-shadow(8px 8px 0 rgba(20, 33, 61, .58)); }
+.folder::before { content: ""; position: absolute; inset: 0 0 6px; z-index: -2; background: var(--grain), var(--folder-back); border-radius: 0 8px 8px 8px; box-shadow: var(--age-edge); filter: url(#worn); }
+.folder::after { content: ""; position: absolute; left: 0; top: -13px; z-index: -2; width: 40%; height: 14px; background: var(--grain), var(--folder-back); border-radius: 8px 8px 0 0; filter: url(#worn); }
+.folder .paper { position: absolute; left: 7%; right: 9%; top: 6px; height: 60%; z-index: -1; background: var(--grain), #FDFBF5; border-radius: 3px; box-shadow: inset 0 0 10px rgba(140, 100, 30, .12), var(--ring); transform: rotate(-1.2deg); transition: transform .2s; }
+.folder .paper::before { content: ""; position: absolute; left: 12px; right: 30%; top: 8px; height: 2px; background: var(--line); box-shadow: 0 6px 0 var(--line); }
+.folder .front { position: relative; flex: 1; display: flex; flex-direction: column; padding: 18px 20px 14px; background: var(--grain), var(--blotch), linear-gradient(var(--folder), var(--folder-deep)); background-size: 180px 180px, 420px 420px, auto; border-radius: 4px 4px 8px 8px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), var(--age-edge), var(--ring), 0 -2px 0 rgba(20, 33, 61, .12); }
+.folder:hover .paper, .folder:focus-within .paper { transform: translateY(-8px) rotate(-2deg); }
+.folder h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 18px; }
+.folder h3 .mi { width: 22px; height: 22px; }
+.folder p { margin: 2px 0 12px; font-size: 15px; color: var(--ink-2); }
+.folder a { display: inline-block; margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(20, 33, 61, .26); width: 100%; font-size: 15px; text-decoration: none; }
+.folder a:hover, .folder a:focus-visible { text-decoration: underline; }
+
+/* 채용 공고 접수증 */
+.tickets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
+/* border 대신 drop-shadow로 톱니 가장자리를 따라 윤곽선을 그려요 */
+.tickets li { display: flex; filter: var(--outline) drop-shadow(4px 4px 0 var(--shade)); transition: transform .2s, filter .2s; }
+.tickets li:hover { transform: translate(-2px, -3px) rotate(-.4deg); filter: drop-shadow(0 0 .6px rgba(20, 33, 61, .65)) drop-shadow(8px 9px 0 rgba(20, 33, 61, .58)); }
+.ticket { --tooth: 6px; flex: 1; display: flex; flex-direction: column; padding: 18px 18px 0; background: var(--grain), var(--white); box-shadow: inset 0 0 18px rgba(140, 100, 30, .1);
+  -webkit-mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x;
+          mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x; }
+.ticket .stub { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: auto -18px 0; padding: 10px 18px 16px; border-top: 2px dashed var(--line); font-size: 13px; color: var(--ink-2); }
+.ticket .info { margin-bottom: 12px; }
+.ticket .co { font-size: 14px; color: var(--ink-2); }
+.ticket h3 { margin: 0 0 8px; font-size: 16px; }
+.tag { display: inline-block; padding: 1px 10px; border-radius: 99px; font-size: 14px; }
+.dday { padding: 2px 10px; border: 3px solid var(--red); border-radius: 4px; color: var(--red); font-weight: 700; font-size: 18px; transform: rotate(-6deg); opacity: .9; -webkit-mask: var(--ink-mask); mask: var(--ink-mask); }
+
+/* 자주 묻는 질문 메모지 */
+.notes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.notes details { position: relative; padding: 20px 20px 16px; }
+.notes details::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(transparent 80%, rgba(255, 255, 255, .55) 81%, rgba(120, 90, 20, .07) 82%, transparent 83.5%), var(--grain), linear-gradient(170deg, var(--note), #F6E07E); border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px; box-shadow: inset 0 0 16px rgba(150, 110, 20, .16); filter: url(#worn) var(--outline) drop-shadow(4px 4px 0 var(--shade)); }
+.notes details::before { content: ""; position: absolute; left: 50%; top: -9px; width: 72px; height: 20px; margin-left: -36px; background: var(--tape); border: 1.5px solid var(--line-ink); box-shadow: var(--shadow-1); transform: rotate(-3deg); }
+.notes details:nth-child(1) { transform: rotate(-.6deg); }
+.notes details:nth-child(2) { transform: rotate(.6deg); }
+.notes summary { cursor: pointer; font-weight: 500; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.notes summary::after { content: "+"; font-size: 20px; line-height: 1; }
+.notes details[open] summary::after { content: "−"; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes p { margin: 10px 0 0; color: var(--ink-2); font-size: 15px; }
+
+.site-foot { padding-bottom: 28px; font-size: 14px; color: var(--ink-2); }
+.site-foot > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 18px; border-top: 1px solid var(--line); }
+.site-foot b { color: var(--ink); font-size: 15px; }
+
+.steps-m { display: none; list-style: none; margin: 0; padding: 12px 20px 20px; gap: 4px; font-size: 14px; counter-reset: s; }
+.steps-m li::before { counter-increment: s; content: counter(s) ". "; font-weight: 700; }
+
+/* 머티리얼 아이콘 (SVG로 넣어요, 이모지는 쓰지 않아요) */
+.mi { width: 24px; height: 24px; flex: none; fill: currentColor; vertical-align: -5px; }
+.mi.red { fill: var(--red); }
+.mi.sm { width: 16px; height: 16px; vertical-align: -3px; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+@media (max-width: 860px) {
+  .folders { grid-template-columns: repeat(2, 1fr); }
+  .tickets { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .hero-text { padding: 24px 20px 0; }
+  .map { margin-top: 8px; }
+  .pins span { display: none; }
+  .steps-m { display: grid; }
+  .notes { grid-template-columns: 1fr; }
+  .folders { gap: 14px; }
+  .folder .front { padding: 16px 14px 12px; }
+  .folder h3 { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="worn"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="4"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter></svg>
+
+<header class="wrap site-head">
+  <a class="logo" href="index.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="#C8313A" stroke-width="3"/><path d="M27 13 22 22 13 27 18 18Z" fill="#C8313A"/></svg>
+    <b>커리어 길잡이</b>
+  </a>
+  <nav class="tabs" aria-label="주 메뉴">
+    <a href="index.html" aria-current="page"><span>홈</span></a>
+    <a href="roles/index.html">직무 사전</a>
+    <a href="jobs/index.html">채용 공고</a>
+    <a href="faq/index.html">자주 묻는 질문</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <h1 id="hero-title">나의 첫 직무,<br>여기서부터 그려가요</h1>
+      <p>직무 탐색부터 첫 지원까지, 나만의 길을 차근차근.</p>
+      <a class="btn" href="roles/index.html">첫 걸음: 직무 사전 보기</a>
+    </div>
+
+    <div class="map">
+      <img src="assets/home/map.png" alt="">
+      <img class="route" src="assets/home/route.png" alt="">
+      <img class="deco flag" src="assets/home/flag.png" alt="">
+      <img class="deco pencil" src="assets/home/pencil.png" alt="">
+      <img class="deco compass" src="assets/home/compass.png" alt="">
+      <span class="stamp" aria-hidden="true">출발 · 오늘</span>
+      <ol class="pins" aria-label="취업 준비 순서">
+        <li class="done" style="left:33%;top:74.5%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><path d="m7.5 11 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.4"/></svg><span>① 직무 알아보기</span></li>
+        <li class="todo" style="left:50%;top:63.4%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><circle cx="12" cy="11" r="4" fill="#fff"/></svg><span>② 공고 살펴보기</span></li>
+        <li class="todo" style="left:66%;top:50.3%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><circle cx="12" cy="11" r="4" fill="#fff"/></svg><span>③ 서류 준비</span></li>
+        <li class="todo last" style="left:81.75%;top:39%"><svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 29C12 29 2 17 2 11a10 10 0 0 1 20 0c0 6-10 18-10 18Z" fill="#14213D"/><circle cx="12" cy="11" r="4" fill="#fff"/></svg><span>④ 지원하기</span></li>
+      </ol>
+    </div>
+    <ol class="steps-m" aria-hidden="true">
+      <li>직무 알아보기 <svg class="mi sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></li><li>공고 살펴보기</li><li>서류 준비</li><li>지원하기</li>
+    </ol>
+  </section>
+
+  <section class="sec" aria-labelledby="roles-title">
+    <div class="sec-head"><h2 id="roles-title"><svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>어떤 길로 가 볼까요?</h2></div>
+    <ul class="folders">
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>개발</h3><p>코드로 문제를 해결해요</p><a href="roles/index.html#dev">이 길로 가기</a></div></li>
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>디자인</h3><p>더 나은 경험을 만들어요</p><a href="roles/index.html#design">이 길로 가기</a></div></li>
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>PO</h3><p>제품의 방향을 그려요</p><a href="roles/index.html#po">이 길로 가기</a></div></li>
+      <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z"/></svg>마케팅</h3><p>가치를 사람에게 전해요</p><a href="roles/index.html#marketing">이 길로 가기</a></div></li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="jobs-title">
+    <div class="sec-head"><h2 id="jobs-title"><svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>마감 임박 채용 공고</h2><a class="more" href="jobs/index.html">채용 공고 더 보기</a></div>
+    <!-- 가상 공고예요. jobs.js가 생기면 그 데이터로 바꿔요 -->
+    <ul class="tickets">
+      <li><div class="ticket"><div class="info"><div class="co">모눈랩</div><h3>프론트엔드 개발자</h3><span class="tag" style="background:var(--dev)">개발</span></div><span class="stub">마감까지<span class="dday">D-7</span></span></div></li>
+      <li><div class="ticket"><div class="info"><div class="co">여백스튜디오</div><h3>주니어 프로덕트 디자이너</h3><span class="tag" style="background:var(--design)">디자인</span></div><span class="stub">마감까지<span class="dday">D-5</span></span></div></li>
+      <li><div class="ticket"><div class="info"><div class="co">다음페이지</div><h3>콘텐츠 마케터</h3><span class="tag" style="background:var(--mkt)">마케팅</span></div><span class="stub">마감까지<span class="dday">D-3</span></span></div></li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="faq-title">
+    <div class="sec-head"><h2 id="faq-title"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>자주 묻는 질문</h2><a class="more" href="faq/index.html">질문 더 보기</a></div>
+    <div class="notes">
+      <details><summary>희망 직무를 아직 정하지 못했어요.</summary><p>괜찮아요. 좋아했던 일과 잘했던 경험부터 적어 보고, 직무 사전에서 비슷한 일을 찾아봐요.</p></details>
+      <details><summary>관련 경험이 없어도 지원할 수 있나요?</summary><p>네. 작은 개인 프로젝트나 수업 과제도 경험이 돼요. 무엇을 배웠는지 한 줄로 정리해 보세요.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap site-foot">
+  <div>
+    <b>커리어 길잡이</b>
+    <span>공고와 회사 이름은 실습용으로 만든 가상 데이터예요.</span>
+  </div>
+</footer>
+
+</body>
+</html>
