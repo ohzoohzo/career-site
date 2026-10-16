@@ -69,13 +69,13 @@ a { color: inherit; }
 .logo svg { flex: none; }
 .logo b { display: block; font-size: 20px; letter-spacing: -.5px; }
 /* 서류철 인덱스 탭: 히어로 종이에 붙어 있어요 */
-.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; margin-bottom: -6px; scrollbar-width: none; }
+.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 8px 0; margin-bottom: -6px; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-.tabs a { position: relative; z-index: 0; display: block; padding: 9px 18px 8px; color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500; white-space: nowrap; }
+.tabs a { position: relative; z-index: 0; display: block; padding: 9px 14px 8px; color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
 .tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
 .tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1.5px solid var(--line-ink); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
 .tabs a:not([aria-current]):hover::before, .tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(#F6F3EC, var(--tab)); }
-.tabs a[aria-current="page"] { z-index: auto; margin-bottom: 4.5px; padding: 13px 22px 9px; font-weight: 700; }
+.tabs a[aria-current="page"] { z-index: auto; margin-bottom: 4.5px; padding: 13px 18px 9px; font-weight: 700; }
 .tabs a[aria-current="page"]::before { z-index: 2; background: var(--sheet); border-color: var(--line-ink); box-shadow: none; }
 .tabs a[aria-current="page"] > span { position: relative; z-index: 3; }
 /* 마닐라 탭: 다른 탭보다 앞, 히어로 종이보다 뒤 (아래쪽은 종이 뒤로 끼워져요) */
@@ -250,6 +250,7 @@ a { color: inherit; }
     <a href="roles/index.html">직무 사전</a>
     <a href="jobs/index.html">채용 공고</a>
     <a href="faq/index.html">자주 묻는 질문</a>
+    <a href="interview/index.html">1분 자기소개</a>
   </nav>
 </header>
 
