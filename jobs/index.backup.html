@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>채용 공고 · 커리어 길잡이</title>
+<style>
+  /* 공통 style.css가 아직 없어 임시로 변수를 이 파일에 둡니다. 공통 파일이 생기면 그쪽 변수로 교체하세요. */
+  :root {
+    --paper: #fbf9f4;
+    --paper-2: #f3eee3;
+    --ink: #1c2540;
+    --ink-soft: #55607a;
+    --navy: #14284b;
+    --red: #c8283c;
+    --red-soft: #fbe3e6;
+    --kraft: #d6b88a;
+    --kraft-dark: #b8945f;
+    --line: #d9d2c2;
+    --dev: #dbeaf8;   --dev-ink: #1f5d96;
+    --des: #dcefe0;   --des-ink: #2b7a45;
+    --po:  #dfe3fa;   --po-ink:  #3a47a8;
+    --mkt: #fbe1e6;   --mkt-ink: #a8334a;
+    --font: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; color: var(--ink); background: var(--paper);
+    font-family: var(--font); line-height: 1.5;
+    background-image: radial-gradient(rgba(20,40,75,.035) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+  /* 헤더 */
+  header.site { border-bottom: 1px solid var(--line); }
+  header.site .wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 14px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 10px; }
+  .brand svg { width: 38px; height: 38px; flex: none; }
+  .brand b { display: block; font-size: 1.15rem; line-height: 1.2; }
+  .brand small { color: var(--ink-soft); font-size: .72rem; }
+  nav.tabs { display: flex; gap: 4px; }
+  nav.tabs a {
+    text-decoration: none; font-size: .88rem; padding: 8px 14px 7px;
+    background: var(--paper-2); border: 1px solid var(--line); border-bottom: 0;
+    border-radius: 10px 10px 0 0; color: var(--ink-soft);
+  }
+  nav.tabs a[aria-current="page"] { background: var(--paper); color: var(--ink); font-weight: 700; padding-top: 11px; box-shadow: 0 -3px 0 var(--kraft) inset; }
+
+  /* 제목 */
+  .hero { padding: 26px 0 8px; }
+  .hero h1 { margin: 0; font-size: clamp(1.9rem, 6vw, 2.6rem); display: flex; align-items: center; gap: 10px; letter-spacing: -.02em; }
+  .hero h1 svg { width: 30px; height: 34px; flex: none; }
+  .hero p { margin: 4px 0 0; color: var(--ink-soft); font-size: 1.05rem; }
+
+  /* 필터 */
+  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 8px; margin: 18px 0 20px; }
+  .filters .label { font-weight: 700; font-size: .9rem; margin-right: 2px; }
+  .filters .sep { width: 1px; height: 28px; background: var(--line); margin: 0 6px; }
+  .chip {
+    border: 1.5px solid var(--ink-soft); background: var(--paper); border-radius: 999px;
+    padding: 6px 16px; font-size: .9rem; min-height: 38px;
+    transition: background .15s, color .15s, transform .15s;
+  }
+  .chip:hover { transform: translateY(-1px); }
+  .chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; font-weight: 700; }
+
+  /* 본문 2단 */
+  .layout { display: grid; gap: 24px; padding-bottom: 36px; }
+  @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 330px; align-items: start; } }
+
+  /* 코르크 게시판 */
+  .board {
+    background: var(--kraft); border: 10px solid var(--paper-2); outline: 1px solid var(--line);
+    border-radius: 10px; padding: 18px 16px 22px; position: relative;
+    background-image:
+      radial-gradient(rgba(120,85,40,.22) 1.2px, transparent 1.6px),
+      radial-gradient(rgba(255,255,255,.18) 1px, transparent 1.4px);
+    background-size: 9px 9px, 13px 13px; background-position: 0 0, 4px 6px;
+    box-shadow: inset 0 2px 10px rgba(80,50,10,.25), 0 6px 14px rgba(20,40,75,.12);
+  }
+  .board-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+  .board-head h2 { margin: 0; font-size: 1.45rem; }
+  .board-head span { font-size: .9rem; font-weight: 600; }
+  .grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px 16px; }
+  @media (min-width: 560px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .note {
+    position: relative; display: block; width: 100%; text-align: left;
+    background: #fff; border: 0; border-radius: 2px; padding: 18px 16px 14px;
+    box-shadow: 0 2px 0 rgba(0,0,0,.05), 0 7px 12px rgba(60,35,5,.28);
+    min-height: 132px; transition: transform .18s, box-shadow .18s;
+  }
+  .note::after { /* 종이 가장자리 살짝 찢긴 느낌 */
+    content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 6px;
+    background: radial-gradient(circle at 5px -1px, transparent 4px, #fff 4.5px) 0 0 / 10px 6px repeat-x;
+  }
+  .grid li:nth-child(odd) .note { transform: rotate(-.6deg); }
+  .grid li:nth-child(even) .note { transform: rotate(.5deg); }
+  .note:hover, .note[aria-pressed="true"] { transform: rotate(0) translateY(-3px); box-shadow: 0 2px 0 rgba(0,0,0,.05), 0 12px 18px rgba(60,35,5,.35); }
+  .note[aria-pressed="true"] { outline: 3px solid var(--red); outline-offset: 2px; }
+  .note .co { font-size: .9rem; color: var(--ink-soft); display: block; padding-right: 74px; }
+  .note .ti { font-size: 1.15rem; font-weight: 800; display: block; margin: 1px 0 10px; padding-right: 74px; line-height: 1.3; letter-spacing: -.01em; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: .76rem; padding: 2px 10px; border-radius: 999px; background: #e9ebf0; color: var(--ink-soft); }
+  .tag.r-dev { background: var(--dev); color: var(--dev-ink); }
+  .tag.r-des { background: var(--des); color: var(--des-ink); }
+  .tag.r-po  { background: var(--po);  color: var(--po-ink); }
+  .tag.r-mkt { background: var(--mkt); color: var(--mkt-ink); }
+  .tag.ai { background: var(--red-soft); color: var(--red); }
+
+  /* 핀·클립 */
+  .pin { position: absolute; top: -10px; left: 14px; width: 18px; height: 18px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ff8a96, var(--red) 55%, #8d1424); box-shadow: 3px 5px 5px rgba(0,0,0,.3); }
+  .pin::after { content: ""; position: absolute; left: 7px; top: 15px; width: 3px; height: 9px; background: #8d8d95; border-radius: 0 0 2px 2px; transform: rotate(-20deg); }
+  .clip { position: absolute; top: -14px; left: 10px; width: 16px; height: 36px; border: 2.5px solid #8e939e; border-radius: 9px; }
+  .clip::after { content: ""; position: absolute; left: 3px; top: 8px; width: 6px; height: 24px; border: 2.5px solid #8e939e; border-radius: 6px; border-top-color: transparent; }
+
+  /* D-day 도장 */
+  .stamp {
+    position: absolute; right: 12px; bottom: 12px; transform: rotate(-7deg);
+    font-weight: 900; font-size: 1.35rem; letter-spacing: .02em; color: var(--red);
+    border: 2.5px solid var(--red); border-radius: 5px; padding: 0 9px; background: rgba(200,40,60,.04);
+    font-family: "Arial Black", var(--font);
+  }
+  .stamp.done { color: var(--ink-soft); border-color: var(--ink-soft); font-size: 1rem; padding: 2px 8px; }
+
+  .empty { grid-column: 1 / -1; background: var(--paper); border-radius: 4px; padding: 26px 18px; text-align: center; box-shadow: 0 5px 10px rgba(60,35,5,.25); }
+  .empty b { display: block; margin-bottom: 4px; }
+
+  /* 선택한 공고 상세 */
+  .detail { margin-top: 20px; background: var(--paper); border-radius: 4px; padding: 16px 18px; box-shadow: 0 6px 12px rgba(60,35,5,.3); position: relative; }
+  .detail[hidden] { display: none; }
+  .detail h3 { margin: 0 0 2px; font-size: 1.15rem; }
+  .detail .co { margin: 0 0 10px; color: var(--ink-soft); font-size: .9rem; }
+  .detail dl { margin: 0; display: grid; grid-template-columns: 5.2em 1fr; gap: 4px 8px; font-size: .92rem; }
+  .detail dt { color: var(--ink-soft); }
+  .detail dd { margin: 0; }
+  .detail .close { position: absolute; top: 8px; right: 10px; border: 0; background: none; font-size: 1.4rem; line-height: 1; padding: 6px 10px; min-height: 40px; }
+  .detail .note-txt { margin: 12px 0 0; font-size: .82rem; color: var(--ink-soft); border-top: 1px dashed var(--line); padding-top: 8px; }
+
+  /* 스프링 노트 달력 */
+  aside.cal { position: relative; background: var(--paper); border: 1px solid var(--line); border-radius: 6px 6px 12px 12px; padding: 40px 18px 20px; margin-top: 18px;
+    box-shadow: 0 6px 16px rgba(20,40,75,.14); }
+  aside.cal .rings { position: absolute; top: -18px; left: 20px; right: 20px; display: flex; justify-content: space-between; }
+  aside.cal .rings i { width: 9px; height: 34px; border-radius: 5px; background: linear-gradient(90deg, #111827, #4b5563 60%, #111827); box-shadow: 1px 3px 3px rgba(0,0,0,.3); }
+  aside.cal h2 { margin: 0 0 10px; font-size: 1.35rem; }
+  .month { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 4px; padding: 4px 6px; margin-bottom: 8px; }
+  .month b { font-size: 1.02rem; }
+  .month button { border: 0; background: none; font-size: 1.3rem; width: 40px; height: 40px; border-radius: 50%; }
+  .month button:hover { background: var(--paper-2); }
+  table.days { width: 100%; border-collapse: collapse; table-layout: fixed; background: #fff; }
+  .days th { font-size: .78rem; font-weight: 600; padding: 6px 0; color: var(--ink-soft); }
+  .days th:first-child, .days td:first-child { color: var(--red); }
+  .days td { border: 1px solid var(--line); height: 38px; text-align: center; font-size: .86rem; padding: 0; }
+  .days td button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--red); background: none; font-weight: 800; color: var(--red); padding: 0; }
+  .days td button[aria-pressed="true"] { background: var(--red); color: #fff; }
+  .days td.today { background: var(--paper-2); font-weight: 800; }
+  .upcoming { margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--kraft-dark); }
+  .upcoming h3 { margin: 0 0 8px; font-size: 1rem; }
+  .upcoming ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .upcoming button { width: 100%; text-align: left; display: flex; align-items: center; gap: 10px; background: #fff; border: 0; border-radius: 4px; padding: 9px 12px; min-height: 42px; box-shadow: 0 2px 4px rgba(20,40,75,.12); }
+  .upcoming button b { color: var(--red); min-width: 2.6em; }
+  .upcoming button span { flex: 1; }
+  .upcoming p { margin: 0; font-size: .88rem; color: var(--ink-soft); }
+
+  footer.site { border-top: 1px solid var(--line); padding: 16px 0 26px; }
+  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; font-size: .8rem; color: var(--ink-soft); }
+  footer.site b { color: var(--ink); }
+
+  @media (max-width: 420px) {
+    .chip { padding: 6px 13px; }
+    .filters .sep { display: none; }
+    nav.tabs a { padding: 8px 9px 7px; font-size: .8rem; }
+    .note .co, .note .ti { padding-right: 0; }
+    .note { padding-bottom: 52px; }
+    .days td { height: 34px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="#c8283c" stroke-width="2.5"/><path d="M20 8l5 12-5 12-5-12z" fill="none" stroke="#14284b" stroke-width="2"/><path d="M20 8l5 12h-10z" fill="#c8283c"/></svg>
+      <span><b>커리어 길잡이</b><small>좋은 시작이, 좋은 커리어를 만듭니다.</small></span>
+    </a>
+    <nav class="tabs" aria-label="주 메뉴">
+      <a href="../index.html">홈</a>
+      <a href="../roles/index.html">직무 사전</a>
+      <a href="index.html" aria-current="page">채용 공고</a>
+      <a href="../faq/index.html">자주 묻는 질문</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>
+      <svg viewBox="0 0 30 34" aria-hidden="true"><path d="M4 2v30" stroke="#8d1424" stroke-width="3" stroke-linecap="round"/><path d="M5 3h22l-5 7 5 7H5z" fill="#c8283c"/></svg>
+      채용 공고
+    </h1>
+    <p>나에게 맞는 기회를 찾고, 다음 걸음을 준비해요.</p>
+  </section>
+
+  <div class="filters" role="group" aria-label="공고 필터">
+    <span class="label" id="roleLabel">직군:</span>
+    <span id="roleChips" role="group" aria-labelledby="roleLabel" style="display:contents"></span>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="chip" id="fNew" aria-pressed="false">신입만</button>
+    <button class="chip" id="fAi" aria-pressed="false">AI 우대</button>
+  </div>
+
+  <div class="layout">
+    <section class="board" aria-labelledby="boardTitle">
+      <div class="board-head">
+        <h2 id="boardTitle">기회의 게시판</h2>
+        <span id="count" aria-live="polite"></span>
+      </div>
+      <ul class="grid" id="grid"></ul>
+      <div class="detail" id="detail" hidden aria-live="polite"></div>
+    </section>
+
+    <aside class="cal" aria-labelledby="calTitle">
+      <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <h2 id="calTitle">이번 달 마감</h2>
+      <div class="month">
+        <button id="prev" aria-label="이전 달">‹</button>
+        <b id="monthLabel"></b>
+        <button id="next" aria-label="다음 달">›</button>
+      </div>
+      <table class="days">
+        <thead><tr><th scope="col">일</th><th scope="col">월</th><th scope="col">화</th><th scope="col">수</th><th scope="col">목</th><th scope="col">금</th><th scope="col">토</th></tr></thead>
+        <tbody id="days"></tbody>
+      </table>
+      <div class="upcoming">
+        <h3>다가오는 마감</h3>
+        <ul id="upcoming"></ul>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span><b>커리어 길잡이</b> · 좋은 시작이, 좋은 커리어를 만듭니다.</span>
+    <span>지금도, 더 나은 내일을 준비하는 모든 사람의 곁에.</span>
+  </div>
+</footer>
+
+<script>
+  // 모든 회사와 공고는 연습용 가상 데이터입니다. (공통 jobs.js가 생기면 이 배열을 그쪽으로 옮겨요.)
+  // "오늘"을 2026-10-16으로 고정해, 언제 열어도 시안과 같은 D-day가 보입니다.
+  var TODAY = new Date(2026, 9, 16);
+
+  var ROLES = ["전체", "개발", "디자인", "PO", "마케팅"];
+  var ROLE_CLASS = { "개발": "r-dev", "디자인": "r-des", "PO": "r-po", "마케팅": "r-mkt" };
+
+  var JOBS = [
+    { id: 1,  co: "모눈랩",       title: "프론트엔드 개발자",       role: "개발",   level: "신입",      ai: true,  date: "2026-10-23", place: "서울 · 하이브리드", about: "학습 서비스 화면을 만들고 다듬는 일을 해요." },
+    { id: 2,  co: "여백스튜디오", title: "주니어 프로덕트 디자이너", role: "디자인", level: "신입",      ai: true,  date: "2026-10-21", place: "서울 · 출근",       about: "앱 화면 흐름을 설계하고 시안을 만들어요." },
+    { id: 3,  co: "다음페이지",   title: "콘텐츠 마케터",           role: "마케팅", level: "신입·경력", ai: true,  date: "2026-10-19", place: "경기 · 하이브리드", about: "뉴스레터와 SNS 콘텐츠를 기획하고 성과를 살펴요." },
+    { id: 4,  co: "나침반소프트", title: "백엔드 개발자",           role: "개발",   level: "신입·경력", ai: true,  date: "2026-10-28", place: "서울 · 출근",       about: "서비스의 데이터와 서버를 안정적으로 운영해요." },
+    { id: 5,  co: "새길기획",     title: "서비스 PO",               role: "PO",     level: "신입",      ai: true,  date: "2026-11-03", place: "서울 · 하이브리드", about: "사용자 문제를 찾아 우선순위를 정하고 팀과 함께 만들어요." },
+    { id: 6,  co: "잔물결디자인", title: "브랜드 디자이너",         role: "디자인", level: "신입·경력", ai: true,  date: "2026-11-06", place: "부산 · 출근",       about: "브랜드의 색과 말투를 일관되게 담아내요." },
+    { id: 7,  co: "초록우체통",   title: "그로스 마케터",           role: "마케팅", level: "신입",      ai: false, date: "2026-10-26", place: "서울 · 원격 가능",  about: "광고와 이벤트로 새 이용자를 만나고 결과를 분석해요." },
+    { id: 8,  co: "하늘책방",     title: "앱 개발자 (Android)",     role: "개발",   level: "신입·경력", ai: false, date: "2026-10-30", place: "서울 · 하이브리드", about: "독서 앱의 새 기능을 만들고 개선해요." },
+    { id: 9,  co: "봄바람공방",   title: "프로덕트 매니저(PM)",     role: "PO",     level: "신입·경력", ai: true,  date: "2026-11-10", place: "경기 · 하이브리드", about: "일정과 범위를 조율하며 제품 출시까지 이끌어요." },
+    { id: 10, co: "작은등대",     title: "UX 리서처",               role: "디자인", level: "신입",      ai: false, date: "2026-10-25", place: "서울 · 원격 가능",  about: "사용자 인터뷰로 불편을 찾아 팀에 전해요." },
+    { id: 11, co: "별빛서점",     title: "데이터 분석가",           role: "개발",   level: "신입",      ai: true,  date: "2026-11-14", place: "서울 · 출근",       about: "이용 기록을 살펴 서비스 개선 아이디어를 제안해요." },
+    { id: 12, co: "노을상회",     title: "브랜드 마케터",           role: "마케팅", level: "신입·경력", ai: false, date: "2026-10-22", place: "대구 · 하이브리드", about: "브랜드 이야기와 캠페인을 기획해요." }
+  ];
+  JOBS.forEach(function (j) {
+    var p = j.date.split("-");
+    j.d = new Date(+p[0], +p[1] - 1, +p[2]);
+    j.left = Math.round((j.d - TODAY) / 86400000);
+  });
+
+  var state = { role: "전체", newOnly: false, aiOnly: false, picked: null, view: new Date(TODAY.getFullYear(), TODAY.getMonth(), 1) };
+  var $ = function (id) { return document.getElementById(id); };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function visible() {
+    return JOBS.filter(function (j) {
+      return (state.role === "전체" || j.role === state.role) &&
+             (!state.newOnly || j.level === "신입") &&
+             (!state.aiOnly || j.ai);
+    }).sort(function (a, b) { return a.d - b.d; });
+  }
+  function dday(j) { return j.left > 0 ? "D-" + j.left : j.left === 0 ? "D-day" : "마감"; }
+
+  function renderRoleChips() {
+    $("roleChips").innerHTML = ROLES.map(function (r) {
+      return '<button class="chip" data-role="' + r + '" aria-pressed="' + (state.role === r) + '">' + r + "</button>";
+    }).join("");
+  }
+
+  function renderGrid() {
+    var list = visible();
+    $("count").textContent = "전체 " + list.length + "개";
+    if (!list.length) {
+      $("grid").innerHTML = '<li class="empty"><b>조건에 맞는 공고가 아직 없어요.</b>필터를 하나 풀어 보세요.</li>';
+      return;
+    }
+    $("grid").innerHTML = list.map(function (j, i) {
+      var deco = i % 3 === 2 ? '<span class="clip" aria-hidden="true"></span>' : '<span class="pin" aria-hidden="true"></span>';
+      return '<li><button class="note" data-id="' + j.id + '" aria-pressed="' + (state.picked === j.id) + '">' + deco +
+        '<span class="co">' + esc(j.co) + '</span>' +
+        '<span class="ti">' + esc(j.title) + '</span>' +
+        '<span class="tags"><span class="tag ' + ROLE_CLASS[j.role] + '">' + j.role + '</span>' +
+        '<span class="tag">' + j.level + '</span>' + (j.ai ? '<span class="tag ai">AI 우대</span>' : '') + '</span>' +
+        '<span class="stamp' + (j.left < 0 ? ' done' : '') + '" aria-label="마감까지 ' + dday(j) + '">' + dday(j) + '</span>' +
+        '</button></li>';
+    }).join("");
+  }
+
+  function renderDetail() {
+    var el = $("detail"), j = JOBS.filter(function (x) { return x.id === state.picked; })[0];
+    if (!j || visible().indexOf(j) < 0) { el.hidden = true; return; }
+    el.hidden = false;
+    el.innerHTML = '<button class="close" aria-label="상세 닫기">×</button>' +
+      '<h3>' + esc(j.title) + '</h3><p class="co">' + esc(j.co) + '</p>' +
+      '<dl><dt>직군</dt><dd>' + j.role + '</dd><dt>대상</dt><dd>' + j.level + '</dd>' +
+      '<dt>근무</dt><dd>' + esc(j.place) + '</dd><dt>마감</dt><dd>' + (j.d.getMonth() + 1) + '월 ' + j.d.getDate() + '일 (' + dday(j) + ')</dd>' +
+      '<dt>하는 일</dt><dd>' + esc(j.about) + '</dd></dl>' +
+      '<p class="note-txt">연습용 가상 공고예요. 실제 지원 링크는 없어요.</p>';
+  }
+
+  function renderCal() {
+    var y = state.view.getFullYear(), m = state.view.getMonth();
+    $("monthLabel").textContent = y + "년 " + (m + 1) + "월";
+    var first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate();
+    var byDay = {};
+    visible().forEach(function (j) { if (j.d.getFullYear() === y && j.d.getMonth() === m) (byDay[j.d.getDate()] = byDay[j.d.getDate()] || []).push(j); });
+    var html = "", day = 1;
+    for (var r = 0; r < 6 && day <= last; r++) {
+      html += "<tr>";
+      for (var c = 0; c < 7; c++) {
+        if ((r === 0 && c < first) || day > last) { html += "<td></td>"; continue; }
+        var isToday = y === TODAY.getFullYear() && m === TODAY.getMonth() && day === TODAY.getDate();
+        var hit = byDay[day];
+        html += '<td' + (isToday ? ' class="today"' : '') + '>' +
+          (hit ? '<button data-id="' + hit[0].id + '" aria-pressed="' + (state.picked === hit[0].id) + '" aria-label="' + (m + 1) + '월 ' + day + '일 마감 ' + hit.map(function (h) { return esc(h.co); }).join(", ") + '">' + day + '</button>' : day) + "</td>";
+        day++;
+      }
+      html += "</tr>";
+    }
+    $("days").innerHTML = html;
+
+    var up = visible().filter(function (j) { return j.left >= 0; }).slice(0, 3);
+    $("upcoming").innerHTML = up.length ? up.map(function (j) {
+      return '<li><button data-id="' + j.id + '"><b>' + (j.d.getMonth() + 1) + '월 ' + j.d.getDate() + '일</b><span>' + esc(j.co) + '</span><span aria-hidden="true" style="flex:none">›</span></button></li>';
+    }).join("") : '<li><p>다가오는 마감이 없어요.</p></li>';
+  }
+
+  function renderAll() { renderRoleChips(); renderGrid(); renderDetail(); renderCal(); }
+
+  function pick(id) {
+    state.picked = state.picked === id ? null : id;
+    var j = JOBS.filter(function (x) { return x.id === state.picked; })[0];
+    if (j) state.view = new Date(j.d.getFullYear(), j.d.getMonth(), 1);
+    renderAll();
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("button"); if (!t) return;
+    if (t.dataset.role) { state.role = t.dataset.role; renderAll(); }
+    else if (t.id === "fNew") { state.newOnly = !state.newOnly; t.setAttribute("aria-pressed", state.newOnly); renderAll(); }
+    else if (t.id === "fAi") { state.aiOnly = !state.aiOnly; t.setAttribute("aria-pressed", state.aiOnly); renderAll(); }
+    else if (t.id === "prev" || t.id === "next") { state.view = new Date(state.view.getFullYear(), state.view.getMonth() + (t.id === "next" ? 1 : -1), 1); renderCal(); }
+    else if (t.classList.contains("close")) { state.picked = null; renderAll(); }
+    else if (t.dataset.id) { pick(+t.dataset.id); }
+  });
+
+  renderAll();
+</script>
+</body>
+</html>
