@@ -14,10 +14,10 @@ const FAQ_ROLES = {
 };
 
 const FAQ_TOPICS = {
-  career:    { label: '직무 고민', color: 'yellow' },
-  docs:      { label: '서류 준비', color: 'green' },
-  interview: { label: '면접',     color: 'pink' },
-  mind:      { label: '마음 관리', color: 'blue' },
+  career:    { label: '직무 고민' },
+  docs:      { label: '서류 준비' },
+  interview: { label: '면접' },
+  mind:      { label: '마음 관리' },
 };
 
 const ROLES_LINK = { href: '../roles/index.html', text: '직무 사전 보러 가기' };
@@ -379,11 +379,11 @@ function fillHighlighted(el, text, query) {
 /* 주제 칩 */
 function renderTopics() {
   els.topics.textContent = '';
-  const entries = [['all', { label: '모두', color: '' }], ...Object.entries(FAQ_TOPICS)];
-  entries.forEach(([key, { label, color }]) => {
+  const entries = [['all', { label: '모두' }], ...Object.entries(FAQ_TOPICS)];
+  entries.forEach(([key, { label }]) => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'chip' + (color ? ' chip--' + color : '');
+    btn.className = 'chip';
     btn.textContent = label;
     btn.setAttribute('aria-pressed', String(state.topic === key));
     btn.addEventListener('click', () => {
@@ -401,13 +401,13 @@ function renderRoles() {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'side__btn';
+    btn.className = 'role-btn';
     btn.setAttribute('aria-pressed', String(state.role === key));
 
     const name = document.createElement('span');
     name.textContent = label;
     const count = document.createElement('span');
-    count.className = 'side__count';
+    count.className = 'role-btn__count';
     count.textContent = filterItems({ role: key }).length;
     count.setAttribute('aria-label', count.textContent + '개');
 
@@ -430,7 +430,7 @@ function createNote(item, query) {
 
   const li = document.createElement('li');
   const note = document.createElement('article');
-  note.className = 'note note--' + topic.color;
+  note.className = 'note';
 
   const h3 = document.createElement('h3');
   h3.className = 'note__h';
@@ -440,11 +440,6 @@ function createNote(item, query) {
   btn.className = 'note__btn';
   btn.setAttribute('aria-expanded', String(isOpen));
   btn.setAttribute('aria-controls', panelId);
-
-  const qMark = document.createElement('span');
-  qMark.className = 'note__q';
-  qMark.setAttribute('aria-hidden', 'true');
-  qMark.textContent = '?';
 
   const body = document.createElement('span');
   const meta = document.createElement('span');
@@ -459,7 +454,7 @@ function createNote(item, query) {
   toggle.className = 'note__toggle';
   toggle.setAttribute('aria-hidden', 'true');
 
-  btn.append(qMark, body, toggle);
+  btn.append(body, toggle);
   h3.append(btn);
 
   const panel = document.createElement('div');
