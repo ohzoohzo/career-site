@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>자주 묻는 질문 · 커리어 길잡이 B안</title>
+<meta name="description" content="개발·디자인·PO·마케팅 취업 준비생이 자주 묻는 질문과 답을 모았어요.">
+<script>
+  // 시스템이 다크 모드면 Montage 다크 토큰을 써요
+  try { if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+</script>
+<!-- 디자인 토큰: 원티드 디자인 시스템 Montage (MIT) / 글꼴: Pretendard -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@montage-ui/core@4.1.3/dist/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<link rel="stylesheet" href="../montage.css">
+<style>
+/* B안 자주 묻는 질문: 검색 + 주제 칩 + 직군 목록 + 아코디언 + 질문 상자 */
+
+/* 머리 + 검색 */
+.page-head { padding-bottom: var(--spacing-32); }
+.search { max-width: 640px; margin-top: var(--spacing-24); }
+.search .input { height: 56px; padding: 0 var(--spacing-8) 0 var(--spacing-16); border-radius: var(--radius-16); }
+.search .input .mi { width: 24px; height: 24px; }
+.search input { font-size: var(--typography-headline1-fontSize); }
+.search input::-webkit-search-cancel-button { display: none; }
+.search input::placeholder { color: var(--fg-3); }
+.clear { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border: 0; border-radius: var(--radius-full); background: none; color: var(--fg-3); cursor: pointer; }
+.clear:hover { background: var(--semantic-surface-neutral-tertiary); color: var(--fg); }
+.clear[hidden] { display: none; }
+.topics { margin-top: var(--spacing-16); }
+
+/* 직군 목록 + 질문 목록 */
+.layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: var(--spacing-40); align-items: start; }
+.side { position: sticky; top: calc(60px + var(--spacing-24)); }
+.side h2 { margin: 0 0 var(--spacing-8); padding: 0 var(--spacing-12); color: var(--fg-3); font-weight: 600; }
+.side ul { display: grid; gap: var(--spacing-2); margin: 0; padding: 0; list-style: none; }
+.role-btn { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-8); width: 100%; height: 44px; padding: 0 var(--spacing-12); border: 0; border-radius: var(--radius-10); background: none; color: var(--fg-2); font-weight: 500; text-align: left; cursor: pointer; transition: background .15s, color .15s; }
+.role-btn:hover { background: var(--semantic-surface-neutral-tertiary); color: var(--fg); }
+.role-btn[aria-pressed="true"] { background: var(--brand-subtle); color: var(--brand-fg); font-weight: 600; }
+.role-btn .count { min-width: 24px; padding: 0 var(--spacing-6); border-radius: var(--radius-full); background: var(--semantic-surface-neutral-secondary); color: var(--fg-3); font-size: var(--typography-caption1-fontSize); line-height: var(--typography-caption1-lineHeight); text-align: center; }
+.role-btn[aria-pressed="true"] .count { background: var(--brand); color: #fff; }
+
+.list-head { margin-bottom: var(--spacing-8); }
+.list-head p { margin: 0; color: var(--fg-3); }
+
+/* 아코디언 (B 홈과 같은 details/summary 패턴) */
+.faq { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line-soft); }
+.faq[hidden] { display: none; }
+.faq details { border-bottom: 1px solid var(--line-soft); }
+.faq summary { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-16); padding: var(--spacing-20) var(--spacing-4); cursor: pointer; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover .q { color: var(--brand-fg); }
+.faq summary > .mi { color: var(--fg-3); transition: rotate .25s; }
+.faq details[open] summary > .mi { rotate: 180deg; }
+.qa-meta { display: flex; flex-wrap: wrap; gap: var(--spacing-4); margin-bottom: var(--spacing-6); }
+.q { display: block; transition: color .15s; }
+.faq .answer { overflow: hidden; }
+.answer-in { display: grid; gap: var(--spacing-8); padding: 0 var(--spacing-4) var(--spacing-24); color: var(--fg-2); }
+.answer-in p { margin: 0; }
+.answer-in .go { justify-self: start; display: inline-flex; align-items: center; gap: var(--spacing-2); margin-top: var(--spacing-4); color: var(--brand-fg); font-weight: 600; text-decoration: none; }
+.answer-in .go:hover { text-decoration: underline; }
+.answer-in .go .mi { width: 18px; height: 18px; }
+mark { padding: 0 1px; border-radius: var(--radius-4); background: var(--semantic-surface-cautionary-primary); color: inherit; }
+
+.empty[hidden] { display: none; }
+.empty .mi { width: 40px; height: 40px; margin-bottom: var(--spacing-8); }
+.empty b { display: block; margin-bottom: var(--spacing-4); color: var(--fg); }
+.empty p { margin: 0 0 var(--spacing-20); }
+
+/* 질문 넣기 */
+.ask { display: flex; align-items: center; gap: var(--spacing-24); padding: var(--spacing-32); background: var(--bg-2); border-color: transparent; }
+.ask .ico { display: grid; place-items: center; width: 64px; height: 64px; flex: none; border-radius: var(--radius-16); background: var(--brand-subtle); color: var(--brand-fg); }
+.ask .ico .mi { width: 32px; height: 32px; }
+.ask h2 { margin: 0 0 var(--spacing-4); }
+.ask p { margin: 0; color: var(--fg-2); }
+.ask .btn { margin-left: auto; flex: none; }
+
+/* 질문 상자 창 */
+.dialog { width: min(480px, calc(100vw - 2 * var(--spacing-16))); max-height: calc(100vh - 2 * var(--spacing-24)); margin: auto; padding: var(--spacing-24); border: 1px solid var(--line-soft); color: var(--fg); overflow: auto; }
+.dialog::backdrop { background: var(--semantic-effect-dimmer-primary); }
+.dialog-head { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-12); margin-bottom: var(--spacing-20); }
+.dialog-head h2 { margin: 0; }
+.dialog-head .clear { margin-right: calc(-1 * var(--spacing-8)); }
+.field-label { display: block; margin-bottom: var(--spacing-6); color: var(--fg-2); font-weight: 600; }
+.select { position: relative; margin-bottom: var(--spacing-16); }
+.select select { width: 100%; height: 48px; padding: 0 var(--spacing-40) 0 var(--spacing-14); border: 1px solid var(--line); border-radius: var(--radius-12); background: var(--bg); appearance: none; cursor: pointer; }
+.select select:focus-visible { outline: 0; border-color: var(--brand); box-shadow: 0 0 0 3px var(--semantic-line-brand-focus); }
+.select .mi { position: absolute; right: var(--spacing-12); top: 50%; translate: 0 -50%; color: var(--fg-3); pointer-events: none; }
+.dialog textarea.field { min-height: 112px; }
+.note { margin: var(--spacing-8) 0 0; color: var(--fg-3); }
+.done { margin: var(--spacing-12) 0 0; color: var(--semantic-foreground-positive-primary); font-weight: 600; }
+.done:empty { display: none; }
+.actions { display: flex; justify-content: flex-end; gap: var(--spacing-8); margin-top: var(--spacing-20); }
+.mine { margin-top: var(--spacing-24); padding-top: var(--spacing-20); border-top: 1px solid var(--line-soft); }
+.mine[hidden] { display: none; }
+.mine h3 { margin: 0 0 var(--spacing-8); }
+.mine ul { display: grid; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; }
+.mine li { display: flex; gap: var(--spacing-8); align-items: baseline; padding: var(--spacing-10) var(--spacing-12); border-radius: var(--radius-10); background: var(--bg-2); color: var(--fg-2); overflow-wrap: anywhere; }
+.mine li .tag { flex: none; }
+
+@media (max-width: 760px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-20); }
+  .side { position: static; }
+  .side h2 { padding: 0; }
+  .side ul { display: flex; flex-wrap: wrap; gap: var(--spacing-6); }
+  .role-btn { width: auto; height: 36px; padding: 0 var(--spacing-12); border: 1px solid var(--line); border-radius: var(--radius-full); font-size: var(--typography-label1-fontSize); }
+  .role-btn[aria-pressed="true"] { border-color: var(--brand); }
+  .ask { flex-wrap: wrap; padding: var(--spacing-24); }
+  .ask .btn { margin-left: 0; width: 100%; }
+}
+@media (max-width: 560px) {
+  .search .input { height: 52px; }
+  .search input { font-size: var(--typography-body1-fontSize); }
+  .ask .ico { width: 52px; height: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .role-btn, .q, .faq summary > .mi { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="주 메뉴">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" stroke-width="3"/><path d="M27 13 22 22 13 27 18 18Z" fill="var(--brand)"/></svg>
+      <b>커리어 길잡이</b>
+    </a>
+    <ul>
+      <li><a href="../">홈</a></li>
+      <li><a href="../roles/index.html">직무 사전</a></li>
+      <li><a href="../jobs/index.html">채용 공고</a></li>
+      <li><a href="./" aria-current="page">자주 묻는 질문</a></li>
+      <li><a href="../interview/index.html">1분 자기소개</a></li>
+    </ul>
+    <a class="switch t-label1" href="../../faq/index.html">종이 버전(A안) 보기</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="page-head" aria-labelledby="hero-title">
+    <h1 id="hero-title" class="t-title1">자주 묻는 질문</h1>
+    <p>혼자 고민하지 말고, 궁금한 마음을 꺼내 보세요.</p>
+
+    <form class="search" role="search" onsubmit="return false">
+      <label for="faq-search" class="sr">질문 검색</label>
+      <div class="input">
+        <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input id="faq-search" type="search" placeholder="궁금한 낱말을 적어 보세요." autocomplete="off">
+        <button type="button" class="clear" id="faq-search-clear" aria-label="검색어 지우기" hidden>
+          <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+    </form>
+
+    <div class="chips topics" role="group" aria-label="주제로 고르기" id="faq-topics"><!-- faq.js가 채움 --></div>
+  </section>
+
+  <section class="layout" aria-labelledby="board-title">
+    <nav class="side" aria-labelledby="side-title">
+      <h2 id="side-title" class="t-label1">직군으로 고르기</h2>
+      <ul id="faq-roles"><!-- faq.js가 채움 --></ul>
+    </nav>
+
+    <div>
+      <div class="sec-head list-head">
+        <h2 id="board-title" class="t-title3">전체 질문</h2>
+        <p class="t-label1" id="faq-count" aria-live="polite"></p>
+      </div>
+      <ul class="faq" id="faq-list"><!-- faq.js가 채움 --></ul>
+      <div class="empty" id="faq-empty" hidden>
+        <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <b class="t-headline1">찾는 질문이 아직 없어요.</b>
+        <p class="t-body2">다른 낱말로 찾아보거나, 아래 질문 상자에 넣어 주세요.</p>
+        <button type="button" class="btn btn-outline btn-sm" id="faq-reset">조건 모두 지우기</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="ask-title">
+    <div class="card ask">
+      <span class="ico" aria-hidden="true"><svg class="mi" viewBox="0 0 24 24"><path d="M19 3H4.99c-1.11 0-1.98.89-1.98 2L3 19c0 1.1.88 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.11-.9-2-2-2zm0 12h-4c0 1.66-1.35 3-3 3s-3-1.34-3-3H4.99V5H19v10z"/></svg></span>
+      <div>
+        <h2 id="ask-title" class="t-headline1">아직 궁금한 게 남았나요?</h2>
+        <p class="t-body2">여기 없는 질문이 있다면 상자에 넣어 주세요.<br>비슷한 고민을 가진 사람이 분명 또 있을 거예요.</p>
+      </div>
+      <button type="button" class="btn btn-primary" id="ask-open">질문 넣기</button>
+    </div>
+  </section>
+</main>
+
+<!-- 질문 넣기 창 -->
+<dialog class="dialog card card-elevated" id="ask-dialog" aria-labelledby="dialog-title">
+  <form method="dialog" id="ask-form">
+    <div class="dialog-head">
+      <h2 id="dialog-title" class="t-headline1">질문 상자에 넣기</h2>
+      <button type="button" class="clear" id="ask-x" aria-label="닫기">
+        <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <label class="field-label t-label1" for="ask-role">어떤 직군 질문인가요?</label>
+    <div class="select">
+      <select id="ask-role" name="role">
+        <option value="common">공통</option>
+        <option value="dev">개발</option>
+        <option value="design">디자인</option>
+        <option value="po">PO</option>
+        <option value="marketing">마케팅</option>
+      </select>
+      <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>
+    </div>
+    <label class="field-label t-label1" for="ask-text">궁금한 점</label>
+    <textarea class="field" id="ask-text" name="text" rows="4" maxlength="200" required placeholder="예) 포트폴리오에 팀 프로젝트만 있어도 괜찮을까요?"></textarea>
+    <p class="note t-caption1">연습용 상자라서, 넣은 질문은 지금 쓰는 브라우저에만 저장돼요.</p>
+    <p class="done t-label1" id="ask-done" role="status"></p>
+    <div class="actions">
+      <button type="button" class="btn btn-outline" id="ask-cancel">닫기</button>
+      <button type="submit" class="btn btn-primary" value="submit">넣기</button>
+    </div>
+    <div class="mine" id="ask-mine" hidden>
+      <h3 class="t-label1">내가 넣은 질문</h3>
+      <ul id="ask-mine-list" class="t-body2"></ul>
+    </div>
+  </form>
+</dialog>
+
+<footer class="foot t-caption1">
+  <div class="wrap">
+    <span><b>커리어 길잡이</b> B안 · 원티드 디자인 시스템 Montage(MIT)의 디자인 토큰을 사용했어요.</span>
+    <span>원티드와 관련 없는 실습 사이트예요. 공고와 회사 이름은 가상 데이터예요.</span>
+  </div>
+</footer>
+
+<script src="faq.js"></script>
+</body>
+</html>

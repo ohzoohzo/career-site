@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>직무 사전 · 커리어 길잡이 B안</title>
+<script>
+  // 시스템이 다크 모드면 Montage 다크 토큰을 써요
+  try { if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+</script>
+<!-- 디자인 토큰: 원티드 디자인 시스템 Montage (MIT) / 글꼴: Pretendard -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@montage-ui/core@4.1.3/dist/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<link rel="stylesheet" href="../montage.css">
+<style>
+/* B안 직무 사전: A안(인덱스 카드 아카이브)과 같은 내용을 Montage 토큰으로 다시 만든 페이지 */
+
+/* 직군 색: 홈 B안의 .ico-* 와 같은 강조색 */
+[data-group="dev"] { --tone-bg: var(--semantic-surface-accent-violet); --tone-fg: var(--semantic-foreground-accent-violet); }
+[data-group="design"] { --tone-bg: var(--semantic-surface-accent-pink); --tone-fg: var(--semantic-foreground-accent-pink); }
+[data-group="po"] { --tone-bg: var(--semantic-surface-accent-cyan); --tone-fg: var(--semantic-foreground-accent-cyan); }
+[data-group="marketing"] { --tone-bg: var(--semantic-surface-accent-lime); --tone-fg: var(--semantic-foreground-accent-lime); }
+[data-group="all"] { --tone-bg: var(--brand-subtle); --tone-fg: var(--brand-fg); }
+.ico { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: var(--radius-12); background: var(--tone-bg); color: var(--tone-fg); }
+.ico .mi { width: 22px; height: 22px; }
+
+/* 페이지 머리 + 직군 필터 */
+.page-head { padding-bottom: var(--spacing-16); }
+.filter { margin: var(--spacing-24) 0 0; padding: 0; list-style: none; scroll-margin-top: 80px; }
+.filter .chip .mi { width: 18px; height: 18px; }
+.filter .chip[aria-pressed="true"] .mi { color: inherit; }
+
+.board { padding-top: var(--spacing-24); }
+.sec-head .more { color: var(--fg-3); }
+
+/* ===== 미니 게임 테스트 ===== */
+.quiz { margin-bottom: var(--spacing-24); padding: var(--spacing-32); background: var(--card); border: 1px solid var(--line-soft); }
+.quiz[hidden], .intro[hidden] { display: none; }
+.q-start { display: grid; justify-items: center; text-align: center; padding: var(--spacing-8) 0; }
+.q-start .ico { width: 52px; height: 52px; margin-bottom: var(--spacing-16); border-radius: var(--radius-16); }
+.q-start .ico .mi { width: 28px; height: 28px; }
+.q-start h3 { margin: 0 0 var(--spacing-6); }
+.q-start .lead { margin: 0 0 var(--spacing-16); color: var(--fg-2); }
+.q-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--spacing-6); margin: 0 0 var(--spacing-24); padding: 0; list-style: none; }
+.q-meta .tag { gap: var(--spacing-4); padding: var(--spacing-4) var(--spacing-10); font-weight: 600; }
+.q-meta .mi { width: 14px; height: 14px; }
+
+.q-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--spacing-12); margin-bottom: var(--spacing-10); color: var(--fg-2); }
+.q-top b { color: var(--fg); font-size: var(--typography-headline1-fontSize); }
+.q-steps { display: flex; gap: var(--spacing-6); margin: 0; padding: 0; list-style: none; }
+.q-steps li { flex: 1; height: 6px; border-radius: var(--radius-full); background: var(--semantic-surface-neutral-secondary); transition: background-color .3s; }
+.q-steps li.done { background: var(--brand); }
+.q-steps li.now { background: var(--semantic-line-brand-focus); }
+
+.q-card { animation: q-in .28s ease-out; }
+@keyframes q-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+.q-text { display: block; margin: var(--spacing-24) 0 var(--spacing-20); outline: none; }
+.q-text small { display: block; margin-bottom: var(--spacing-4); color: var(--brand-fg); font-size: var(--typography-caption1-fontSize); line-height: var(--typography-caption1-lineHeight); letter-spacing: .08em; font-weight: 700; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-10); margin: 0; padding: 0; list-style: none; }
+.choice { display: flex; align-items: center; gap: var(--spacing-12); width: 100%; height: 100%; min-height: 64px; padding: var(--spacing-14) var(--spacing-16); border: 1px solid var(--line); border-radius: var(--radius-14); background: var(--card); color: var(--fg); text-align: left; cursor: pointer; transition: border-color .15s, background-color .15s, box-shadow .15s, transform .15s; }
+.choice .key { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: var(--radius-8); background: var(--tone-bg); color: var(--tone-fg); font-size: var(--typography-label1-fontSize); font-weight: 700; }
+.choice:hover { border-color: var(--fg-3); box-shadow: var(--semantic-elevation-shadow-normal-small); transform: translateY(-1px); }
+.choice.chosen { border-color: var(--brand); background: var(--brand-subtle); box-shadow: 0 0 0 1px var(--brand); }
+.choice.chosen .key { background: var(--brand); color: #fff; }
+.q-nav { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-12); margin-top: var(--spacing-16); color: var(--fg-3); }
+.q-back { padding-left: var(--spacing-8); color: var(--fg-2); }
+.q-back:hover { background: var(--semantic-surface-neutral-tertiary); }
+.q-back[disabled] { visibility: hidden; }
+
+.quiz-result { margin-top: var(--spacing-20); padding: var(--spacing-24); border-radius: var(--radius-16); background: var(--tone-bg); outline: none; }
+.quiz-result .tag-brand { margin-bottom: var(--spacing-12); font-weight: 700; }
+.quiz-result .pick { margin: 0 0 var(--spacing-8); }
+.quiz-result .pick b { color: var(--tone-fg); }
+.quiz-result p { margin: 0 0 var(--spacing-6); color: var(--fg-2); }
+.quiz-result .pick, .quiz-result .pick ~ p b { color: var(--fg); }
+.quiz-result .note { color: var(--fg-3); }
+.quiz-actions { display: flex; flex-wrap: wrap; gap: var(--spacing-8); margin-top: var(--spacing-16); }
+.quiz-result .btn-outline { background: var(--bg); }
+.quiz-result .btn-outline:hover { background: var(--semantic-surface-neutral-tertiary); }
+
+/* ===== 직군 소개 ===== */
+.intro { margin-bottom: var(--spacing-32); padding: var(--spacing-24); }
+.intro header { display: flex; align-items: center; gap: var(--spacing-12); margin-bottom: var(--spacing-10); }
+.intro h3 { margin: 0; }
+.intro .lead { margin: 0 0 var(--spacing-20); color: var(--fg-2); }
+.intro-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-16); }
+.intro-box { padding: var(--spacing-16) var(--spacing-20); border-radius: var(--radius-12); background: var(--semantic-surface-neutral-secondary); }
+.intro h4 { margin: 0 0 var(--spacing-10); }
+.ticks { display: grid; gap: var(--spacing-8); margin: 0; padding: 0; list-style: none; color: var(--fg-2); }
+.ticks li { display: flex; gap: var(--spacing-8); }
+.ticks .mi { width: 18px; height: 18px; margin-top: 2px; color: var(--tone-fg); }
+.ticks .n { display: grid; place-items: center; flex: none; width: 20px; height: 20px; margin-top: 1px; border-radius: var(--radius-full); background: var(--tone-bg); color: var(--tone-fg); font-size: var(--typography-caption2-fontSize); font-weight: 700; }
+
+/* ===== 직무 카드 ===== */
+.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-16); margin: 0; padding: 0; list-style: none; }
+.role-grid > li[hidden] { display: none; }
+.role-card { display: flex; flex-direction: column; height: 100%; scroll-margin: 100px; transition: box-shadow .2s, border-color .2s, transform .2s; }
+.role-card:hover { border-color: var(--line); box-shadow: var(--semantic-elevation-shadow-normal-medium); transform: translateY(-2px); }
+.role-card .top { display: flex; align-items: center; gap: var(--spacing-10); margin-bottom: var(--spacing-14); }
+.role-card .top .tag { background: var(--tone-bg); color: var(--tone-fg); font-weight: 600; }
+.role-card .top .tag-brand { margin-left: auto; background: var(--brand); color: #fff; }
+.role-card h3 { margin: 0 0 var(--spacing-14); }
+.role-card h4 { margin: 0 0 var(--spacing-6); color: var(--fg-3); font-weight: 600; }
+.tasks { margin: 0 0 var(--spacing-16); padding: 0; list-style: none; color: var(--fg-2); }
+.tasks li { position: relative; padding-left: var(--spacing-14); }
+.tasks li + li { margin-top: var(--spacing-2); }
+.tasks li::before { content: ""; position: absolute; left: var(--spacing-2); top: .65em; width: 4px; height: 4px; border-radius: var(--radius-full); background: var(--fg-3); }
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-12); padding-top: var(--spacing-14); border-top: 1px solid var(--line-soft); }
+.meta .chips { gap: var(--spacing-4); }
+.ai { display: flex; gap: var(--spacing-8); margin-top: auto; padding: var(--spacing-10) var(--spacing-12); border-radius: var(--radius-10); background: var(--semantic-surface-neutral-secondary); color: var(--fg-2); }
+.meta { margin-bottom: var(--spacing-16); }
+.ai .mi { width: 18px; height: 18px; margin-top: 2px; color: var(--brand-fg); }
+.ai b { color: var(--fg); font-weight: 600; margin-right: var(--spacing-4); }
+.role-card.picked { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand), var(--semantic-elevation-shadow-normal-medium); }
+
+@media (max-width: 900px) {
+  .role-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .role-grid { grid-template-columns: 1fr; gap: var(--spacing-12); }
+  .quiz { padding: var(--spacing-20); }
+  .choices { grid-template-columns: 1fr; }
+  .choice { min-height: 56px; }
+  .q-text { margin: var(--spacing-20) 0 var(--spacing-16); font-size: var(--typography-headline1-fontSize); line-height: var(--typography-headline1-lineHeight); }
+  .intro { padding: var(--spacing-20); }
+  .intro-cols { grid-template-columns: 1fr; }
+  .quiz-result { padding: var(--spacing-20); }
+  .q-nav .label { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .q-card { animation: none; }
+  .choice, .q-steps li, .role-card { transition: none; }
+  .choice:hover, .role-card:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="주 메뉴">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" stroke-width="3"/><path d="M27 13 22 22 13 27 18 18Z" fill="var(--brand)"/></svg>
+      <b>커리어 길잡이</b>
+    </a>
+    <ul>
+      <li><a href="../">홈</a></li>
+      <li><a href="./" aria-current="page">직무 사전</a></li>
+      <li><a href="../jobs/index.html">채용 공고</a></li>
+      <li><a href="../faq/index.html">자주 묻는 질문</a></li>
+      <li><a href="../interview/index.html">1분 자기소개</a></li>
+    </ul>
+    <a class="switch t-label1" href="../../roles/index.html">종이 버전(A안) 보기</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <header class="page-head">
+    <h1 id="hero-title" class="t-title1">직무 사전</h1>
+    <p>하는 일부터 필요한 역량까지, 나에게 맞는 직무를 찾아보세요.</p>
+    <ul class="chips filter" id="filter" aria-label="직군으로 보기">
+      <li><button type="button" class="chip" data-filter="all" aria-pressed="true">전체</button></li>
+      <li><button type="button" class="chip" data-filter="dev" aria-pressed="false">개발</button></li>
+      <li><button type="button" class="chip" data-filter="design" aria-pressed="false">디자인</button></li>
+      <li><button type="button" class="chip" data-filter="po" aria-pressed="false">PO</button></li>
+      <li><button type="button" class="chip" data-filter="marketing" aria-pressed="false">마케팅</button></li>
+    </ul>
+  </header>
+
+  <section class="sec board" aria-labelledby="cards-title">
+    <section class="quiz card card-elevated" id="quiz" aria-label="미니 게임 테스트" hidden></section>
+    <p class="sr" id="quiz-live" aria-live="polite"></p>
+    <section class="intro card" id="intro" aria-label="직군 소개" hidden></section>
+    <div class="sec-head">
+      <h2 id="cards-title" class="t-title3">직군별 확인하기</h2>
+      <span class="more t-label1" id="count" aria-live="polite"></span>
+    </div>
+    <ul class="role-grid" id="role-grid"></ul>
+  </section>
+</main>
+
+<footer class="foot t-caption1">
+  <div class="wrap">
+    <span><b>커리어 길잡이</b> B안 · 원티드 디자인 시스템 Montage(MIT)의 디자인 토큰을 사용했어요.</span>
+    <span>원티드와 관련 없는 실습 사이트예요. 공고와 회사 이름은 가상 데이터예요.</span>
+  </div>
+</footer>
+
+<script src="roles.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1분 자기소개 연습 · 커리어 길잡이 B안</title>
+<script>
+  // 시스템이 다크 모드면 Montage 다크 토큰을 써요
+  try { if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+</script>
+<!-- 디자인 토큰: 원티드 디자인 시스템 Montage (MIT) / 글꼴: Pretendard -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@montage-ui/core@4.1.3/dist/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<link rel="stylesheet" href="../montage.css">
+<style>
+/* B안 1분 자기소개: 타이머 카드 + 쓰기 카드 + 직군별 사례 */
+[hidden] { display: none !important; }
+
+/* 연습 영역: 왼쪽 타이머, 오른쪽 쓰기 */
+.practice { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: var(--spacing-24); align-items: start; scroll-margin-top: 76px; }
+.card h2 { display: flex; align-items: center; gap: var(--spacing-8); margin: 0 0 var(--spacing-4); }
+.card h2 .mi { color: var(--brand-fg); width: 22px; height: 22px; }
+.card h2:focus { outline: 0; }
+.card h2:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: var(--radius-8); }
+.sub { margin: 0; color: var(--fg-3); }
+
+/* 타이머 카드 */
+.timer { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-20); padding: var(--spacing-24); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; width: 100%; padding: var(--spacing-4); border-radius: var(--radius-12); background: var(--semantic-surface-neutral-secondary); }
+.seg button { height: 40px; border: 0; border-radius: var(--radius-10); background: none; color: var(--fg-3); font-weight: 600; cursor: pointer; transition: background .15s, color .15s, box-shadow .15s; }
+.seg button:hover { color: var(--fg); }
+.seg button[aria-pressed="true"] { background: var(--card); color: var(--fg); box-shadow: var(--semantic-elevation-shadow-normal-small); }
+
+.ring { position: relative; width: min(240px, 100%); aspect-ratio: 1; }
+.ring svg { display: block; width: 100%; height: 100%; rotate: -90deg; }
+.ring .track { fill: none; stroke: var(--semantic-surface-neutral-secondary); stroke-width: 12; }
+.ring .bar { fill: none; stroke: var(--brand); stroke-width: 12; stroke-linecap: round; }
+.ring.is-done .bar { stroke: var(--semantic-line-neutral-secondary); }
+.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-2); }
+.ring-time { font-size: var(--typography-display2-fontSize); line-height: var(--typography-display2-lineHeight); letter-spacing: var(--typography-display2-letterSpacing); font-variant-numeric: tabular-nums; }
+.ring-label { color: var(--fg-3); font-weight: 500; }
+.ring.is-run .ring-label { color: var(--brand-fg); }
+
+.done-note { display: flex; gap: var(--spacing-10); width: 100%; padding: var(--spacing-12) var(--spacing-14); border-radius: var(--radius-12); background: var(--brand-subtle); color: var(--brand-fg); }
+.done-note .mi { margin-top: var(--spacing-2); }
+.done-note strong { display: block; }
+.done-note span { color: var(--fg-2); }
+
+.timer .actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-8); width: 100%; }
+.timer .actions .btn-primary { grid-column: 1 / -1; }
+.sound[aria-pressed="true"] { border-color: var(--brand); color: var(--brand-fg); background: var(--brand-subtle); }
+.btn .mi { width: 18px; height: 18px; }
+
+/* 쓰기 카드 */
+.script { padding: var(--spacing-24); }
+.script > div > .sub { margin-bottom: var(--spacing-20); }
+.fieldset { display: grid; gap: var(--spacing-16); }
+.fieldset label { display: flex; align-items: center; gap: var(--spacing-8); margin-bottom: var(--spacing-6); font-weight: 600; }
+.num { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: var(--radius-full); font-size: var(--typography-caption1-fontSize); font-weight: 700; flex: none; }
+.n1 { background: var(--brand-subtle); color: var(--brand-fg); }
+.n2 { background: var(--semantic-surface-accent-violet); color: var(--semantic-foreground-accent-violet); }
+.n3 { background: var(--semantic-surface-accent-cyan); color: var(--semantic-foreground-accent-cyan); }
+textarea.field { display: block; min-height: 0; }
+textarea.field::placeholder { color: var(--fg-3); }
+.script-foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-8) var(--spacing-16); margin-top: var(--spacing-20); padding-top: var(--spacing-16); border-top: 1px solid var(--line-soft); }
+.count { display: inline-flex; align-items: center; gap: var(--spacing-6); font-weight: 600; font-variant-numeric: tabular-nums; }
+.save-note { display: inline-flex; align-items: center; gap: var(--spacing-4); color: var(--fg-3); }
+.save-note .mi { width: 16px; height: 16px; }
+
+/* 원고: 핵심 문장 표시 */
+.manuscript { margin: 0; line-height: 1.9; }
+.s1 { padding: var(--spacing-2) 0; border-radius: var(--radius-4); background: var(--brand-subtle); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.s2 { text-decoration: underline 2px var(--semantic-line-accent-violet); text-underline-offset: 5px; }
+.s3 { padding: var(--spacing-2) 0; border-radius: var(--radius-4); background: var(--semantic-surface-accent-cyan); font-weight: 600; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--spacing-6) var(--spacing-16); margin: var(--spacing-16) 0 0; padding: 0; list-style: none; color: var(--fg-3); }
+.legend li { display: flex; align-items: center; gap: var(--spacing-6); }
+.legend i { display: inline-block; width: 18px; height: 10px; border-radius: var(--radius-4); }
+.legend .k1 { background: var(--brand-subtle); }
+.legend .k2 { height: 2px; border-radius: 0; background: var(--semantic-line-accent-violet); }
+.legend .k3 { background: var(--semantic-surface-accent-cyan); }
+.ex-box { padding: var(--spacing-16) var(--spacing-20); border: 1px solid var(--line-soft); border-radius: var(--radius-12); background: var(--bg); }
+
+/* 직군별 사례 */
+.sec-head.stack { flex-direction: column; align-items: flex-start; gap: var(--spacing-4); }
+.sec-head.stack p { margin: 0; color: var(--fg-2); }
+.chips .chip .mi { width: 18px; height: 18px; }
+.role-chips { margin-bottom: var(--spacing-16); }
+.example { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--spacing-24); padding: var(--spacing-24); }
+.example .meta { display: flex; align-items: center; flex-wrap: wrap; gap: var(--spacing-8); margin-bottom: var(--spacing-8); color: var(--fg-3); }
+.example h3 { margin: 0 0 var(--spacing-12); }
+.why { display: flex; flex-direction: column; gap: var(--spacing-12); padding-left: var(--spacing-24); border-left: 1px solid var(--line-soft); }
+.why h4 { margin: 0; }
+.why ul { display: grid; gap: var(--spacing-10); margin: 0; padding: 0; list-style: none; }
+.why li { display: flex; gap: var(--spacing-8); color: var(--fg-2); }
+.why li .mi { width: 18px; height: 18px; margin-top: var(--spacing-2); color: var(--semantic-foreground-positive-primary); }
+.why .btn { margin-top: auto; align-self: flex-start; }
+.tag-dev { background: var(--semantic-surface-accent-violet); color: var(--semantic-foreground-accent-violet); }
+.tag-design { background: var(--semantic-surface-accent-pink); color: var(--semantic-foreground-accent-pink); }
+.tag-po { background: var(--semantic-surface-accent-cyan); color: var(--semantic-foreground-accent-cyan); }
+.tag-mkt { background: var(--semantic-surface-accent-lime); color: var(--semantic-foreground-accent-lime); }
+
+@media (max-width: 900px) {
+  .practice { grid-template-columns: 1fr; }
+  .timer { max-width: 520px; width: 100%; justify-self: center; }
+  .example { grid-template-columns: 1fr; }
+  .why { padding: var(--spacing-20) 0 0; border-left: 0; border-top: 1px solid var(--line-soft); }
+}
+@media (max-width: 560px) {
+  .timer, .script, .example { padding: var(--spacing-20) var(--spacing-16); }
+  .ring { width: min(208px, 100%); }
+  .ring-time { font-size: var(--typography-display3-fontSize); line-height: var(--typography-display3-lineHeight); }
+  .why .btn { align-self: stretch; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seg button { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="주 메뉴">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" stroke-width="3"/><path d="M27 13 22 22 13 27 18 18Z" fill="var(--brand)"/></svg>
+      <b>커리어 길잡이</b>
+    </a>
+    <ul>
+      <li><a href="../">홈</a></li>
+      <li><a href="../roles/index.html">직무 사전</a></li>
+      <li><a href="../jobs/index.html">채용 공고</a></li>
+      <li><a href="../faq/index.html">자주 묻는 질문</a></li>
+      <li><a href="./" aria-current="page">1분 자기소개</a></li>
+    </ul>
+    <a class="switch t-label1" href="../../interview/index.html">종이 버전(A안) 보기</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="page-head" aria-labelledby="page-title">
+    <h1 id="page-title" class="t-title1">1분 자기소개 연습</h1>
+    <p>내 소개를 세 문장으로 써 보고, 타이머를 켜고 소리 내어 말해 보세요.</p>
+  </section>
+
+  <section class="practice" id="practice" aria-label="연습하기">
+    <div class="card card-elevated timer">
+      <div class="seg" role="group" aria-label="연습 시간 고르기">
+        <button type="button" data-sec="30" aria-pressed="false">30초</button>
+        <button type="button" data-sec="60" aria-pressed="true">1분</button>
+      </div>
+
+      <div class="ring" id="ring">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="track" cx="100" cy="100" r="88"/>
+          <circle class="bar" id="ringBar" cx="100" cy="100" r="88"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-time t-title1" id="time" role="timer" aria-atomic="true">1:00</div>
+          <p class="ring-label t-label1" id="timeLabel" style="margin:0">남은 시간</p>
+        </div>
+      </div>
+
+      <div class="done-note" id="doneNote" role="status" aria-live="assertive" hidden>
+        <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <div><strong>시간 끝났습니다!</strong><span class="t-body2">어디까지 말했는지 떠올려 보세요.</span></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="startBtn">
+          <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <span>시작</span>
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" id="resetBtn">
+          <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          다시 하기
+        </button>
+        <button type="button" class="btn btn-outline btn-sm sound" id="soundBtn" aria-pressed="false">
+          <svg class="mi" id="soundOff" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
+          <svg class="mi" id="soundOn" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span id="soundText">끝날 때 소리 꺼짐</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card script">
+      <!-- 내 자기소개 쓰기 -->
+      <div id="writeView">
+        <h2 id="writeTitle" class="t-heading2" tabindex="-1">
+          <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          내 1분 자기소개 쓰기
+        </h2>
+        <p class="sub t-body2">세 칸만 채우면 완성이에요. 다 쓰면 타이머를 켜고 소리 내어 읽어 보세요.</p>
+        <div class="fieldset">
+          <div>
+            <label for="w1" class="t-label1"><span class="num n1" aria-hidden="true">1</span>나는 어떤 사람인가요?</label>
+            <textarea class="field t-body2" id="w1" rows="2" placeholder="예) 작은 불편을 코드로 줄이는 걸 좋아하는 지원자입니다."></textarea>
+          </div>
+          <div>
+            <label for="w2" class="t-label1"><span class="num n2" aria-hidden="true">2</span>그걸 보여 주는 경험 하나 (숫자나 장면과 함께)</label>
+            <textarea class="field t-body2" id="w2" rows="4" placeholder="예) 동아리 출석 집계를 웹 페이지로 바꿔, 30분 걸리던 일을 5분으로 줄였습니다."></textarea>
+          </div>
+          <div>
+            <label for="w3" class="t-label1"><span class="num n3" aria-hidden="true">3</span>왜 이 직무·회사에서 일하고 싶나요?</label>
+            <textarea class="field t-body2" id="w3" rows="2" placeholder="예) 사용자의 작은 불편부터 해결하는 개발자가 되겠습니다."></textarea>
+          </div>
+        </div>
+        <div class="script-foot">
+          <span class="count t-label1" id="count" aria-live="polite">지금 0자</span>
+          <span class="save-note t-caption1">
+            <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            쓴 내용은 이 브라우저에만 저장돼요.
+          </span>
+        </div>
+      </div>
+
+      <!-- 사례 보며 연습 -->
+      <div id="exampleView" hidden>
+        <h2 id="exTitle" class="t-heading2" tabindex="-1">
+          <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.4 6 14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>
+          <span id="exHeading"></span>
+        </h2>
+        <p class="sub t-body2" id="exSub"></p>
+        <div class="ex-box"><p class="manuscript" id="exBody"></p></div>
+        <ul class="legend t-caption1" aria-label="표시 설명">
+          <li><i class="k1"></i>나는 누구</li>
+          <li><i class="k2"></i>근거 경험</li>
+          <li><i class="k3"></i>왜 이 직무</li>
+        </ul>
+        <div class="script-foot">
+          <span class="sub t-caption1">소리 내어 읽은 다음, 내 이야기로 바꿔 써 보세요.</span>
+          <button type="button" class="btn btn-outline btn-sm" id="backWrite">
+            <svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            내 자기소개 쓰러 가기
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="ex-title">
+    <div class="sec-head stack">
+      <h2 id="ex-title" class="t-title3">직군별 잘된 사례</h2>
+      <p class="t-body2">가상의 지원자가 쓴 예시예요. 구조를 보고 내 이야기로 바꿔 보세요.</p>
+    </div>
+    <div class="chips role-chips" role="group" aria-label="직군 고르기" id="roleChips"></div>
+    <div id="examplePanel" aria-live="polite"></div>
+  </section>
+</main>
+
+<footer class="foot t-caption1">
+  <div class="wrap">
+    <span><b>커리어 길잡이</b> B안 · 원티드 디자인 시스템 Montage(MIT)의 디자인 토큰을 사용했어요.</span>
+    <span>원티드와 관련 없는 실습 사이트예요. 공고와 회사 이름은 가상 데이터예요.</span>
+  </div>
+</footer>
+
+<script src="interview.js"></script>
+</body>
+</html>
