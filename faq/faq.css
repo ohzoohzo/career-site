@@ -61,7 +61,7 @@ body {
 }
 a { color: inherit; }
 button, input, select, textarea { font: inherit; color: inherit; }
-.wrap { max-width: calc(690px + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
 
 :focus-visible { outline: 3px solid var(--folder-deep); outline-offset: 3px; }
 
@@ -140,7 +140,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .more { margin: 0; padding-bottom: 8px; font-size: 14px; color: var(--ink-2); }
 
 /* ---------- 직군 + 질문 배치 ---------- */
-.faq-layout { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 28px; align-items: start; }
+.faq-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 32px; align-items: start; }
 
 /* 직군: 인덱스 카드 묶음 */
 .roles { position: sticky; top: 16px; }
@@ -161,7 +161,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .role-btn__count { font-size: 13px; color: var(--ink-2); }
 
 /* ---------- 메모지 질문 (홈 메모지와 같은 모양) ---------- */
-.notes { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; }
+.notes { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; align-items: start; }
+@media (min-width: 1024px) { .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 24px; } }
 .note { position: relative; isolation: isolate; padding: 20px 20px 16px; transition: transform .15s; }
 .note::after {
   content: ""; position: absolute; inset: 0; z-index: -1;
