@@ -279,6 +279,7 @@ mark { background: var(--mark); color: inherit; padding: 0 1px; }
   .chip { padding: 6px 13px; font-size: 14px; }
   .note { padding: 18px 16px 14px; }
   .ask { grid-template-columns: minmax(0, 1fr); padding: 22px 18px; text-align: center; gap: 4px; }
+  .ask h2 { justify-content: center; }
   .ask__box { order: -1; max-width: 140px; margin: 0 auto; }
 }
 
