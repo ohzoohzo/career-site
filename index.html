@@ -55,24 +55,24 @@ a { color: inherit; }
 .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
 
 /* 헤더 */
-.site-head { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 18px; flex-wrap: wrap; }
+.site-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 16px; padding-top: 18px; flex-wrap: wrap; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-bottom: 12px; }
 .logo svg { flex: none; }
 .logo b { display: block; font-size: 22px; letter-spacing: -.5px; }
 .logo small { display: block; font-size: 12px; color: var(--ink-2); }
 /* 서류철 인덱스 탭: 히어로 종이에 붙어 있어요 */
-.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; scrollbar-width: none; }
+.tabs { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; max-width: 100%; padding: 12px 10px 0; margin-bottom: -6px; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-.tabs a { position: relative; z-index: 0; display: block; padding: 9px 26px 8px; color: var(--ink); text-decoration: none; font-size: 15px; white-space: nowrap; transition: transform .15s; }
+.tabs a { position: relative; z-index: 0; display: block; padding: 9px 26px 8px; color: var(--ink); text-decoration: none; font-size: 15px; white-space: nowrap; }
 .tabs a::before, .tabs a[aria-current="page"]::after { content: ""; position: absolute; border-bottom: 0; border-radius: 8px 8px 0 0; transform: perspective(60px) rotateX(5deg); transform-origin: bottom; }
 .tabs a::before { inset: 0; z-index: -1; background: linear-gradient(var(--tab), var(--tab-deep)); border: 1px solid var(--tab-line); border-bottom-width: 0; box-shadow: inset 0 -7px 8px -7px rgba(20, 33, 61, .18); }
-.tabs a:not([aria-current]):hover { transform: translateY(-2px); }
-.tabs a[aria-current="page"] { z-index: 1; margin-bottom: -1px; padding: 13px 30px 9px; font-weight: 700; }
+.tabs a:not([aria-current]):hover::before, .tabs a:not([aria-current]):focus-visible::before { background: linear-gradient(#F6F3EC, var(--tab)); }
+.tabs a[aria-current="page"] { z-index: 2; margin-bottom: 5px; padding: 13px 30px 9px; font-weight: 700; }
 .tabs a[aria-current="page"]::before { background: var(--sheet); border-color: var(--line); box-shadow: 0 -2px 6px rgba(20, 33, 61, .06); }
 .tabs a[aria-current="page"]::after { inset: -6px -11px 4px 14px; z-index: -2; background: linear-gradient(var(--folder), var(--folder-deep)); border: 1px solid var(--folder-back); border-bottom-width: 0; }
 
 /* 히어로: 지도 위에 길을 그려 나가요 */
-.hero { margin: 0 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); overflow: hidden;
+.hero { position: relative; z-index: 1; margin: 0 0 36px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--age-edge), var(--shadow-2); overflow: hidden;
   background-image: var(--blotch), var(--grain), linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 420px 420px, 180px 180px, 22px 22px, 22px 22px; }
 .hero-text { padding: 36px 40px 0; }
 .hero h1 { margin: 0; font-size: clamp(30px, 4.6vw, 48px); line-height: 1.2; letter-spacing: -1.5px; }
@@ -129,7 +129,7 @@ a { color: inherit; }
 .tickets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; list-style: none; margin: 0; padding: 0; }
 .tickets li { filter: drop-shadow(0 1px 1px rgba(20, 33, 61, .08)) drop-shadow(0 4px 8px rgba(20, 33, 61, .08)); transition: transform .2s; }
 .tickets li:hover { transform: translateY(-3px) rotate(-.4deg); }
-.ticket { --tooth: 6px; display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 20px 0 20px 20px; background: linear-gradient(97deg, transparent 61.5%, rgba(255, 255, 255, .7) 62%, rgba(20, 33, 61, .05) 62.6%, transparent 63.4%), var(--grain), #FEFCF7; box-shadow: inset 0 0 18px rgba(140, 100, 30, .12);
+.ticket { --tooth: 6px; display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 20px 0 20px 20px; background: var(--grain), #FEFCF7; box-shadow: inset 0 0 18px rgba(140, 100, 30, .12);
   -webkit-mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x;
           mask: radial-gradient(circle var(--tooth) at 50% 0, #0000 97%, #000) 50% 0 / 16px 51% repeat-x, radial-gradient(circle var(--tooth) at 50% 100%, #0000 97%, #000) 50% 100% / 16px 51% repeat-x; }
 .ticket .stub { align-self: stretch; display: grid; place-items: center; padding: 0 18px; margin-left: 12px; border-left: 2px dashed var(--line); }
