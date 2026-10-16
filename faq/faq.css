@@ -274,6 +274,11 @@ mark { background: var(--mark); color: inherit; padding: 0 1px; }
   .role-btn { width: auto; min-height: 40px; }
 }
 @media (max-width: 560px) {
+  /* 탭 4개가 한 화면에 다 보이도록 글자·여백을 화면 폭에 맞춰 줄여요 */
+  .tabs { gap: 2px; padding: 12px 8px 0 0; }
+  .tabs a { padding: 8px clamp(6px, 2.4vw, 14px) 7px; font-size: clamp(11px, 3.6vw, 15px); }
+  .tabs a[aria-current="page"] { padding: 11px clamp(7px, 2.8vw, 16px) 8px; }
+  .tabs a[aria-current="page"]::after { inset: -5px -8px -8px 10px; }
   .hero { padding: 24px 18px 22px; }
   .hero__lead { font-size: 16px; }
   .chip { padding: 6px 13px; font-size: 14px; }
