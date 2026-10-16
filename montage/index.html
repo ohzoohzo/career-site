@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>커리어 길잡이 · B안</title>
+<script>
+  // 시스템이 다크 모드면 Montage 다크 토큰을 써요
+  try { if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+</script>
+<!-- 디자인 토큰: 원티드 디자인 시스템 Montage (MIT) / 글꼴: Pretendard -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@montage-ui/core@4.1.3/dist/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+/* B안: 같은 내용을 Montage 토큰(색·글자·간격·모서리·그림자)으로 다시 만든 서비스형 홈 */
+:root {
+  --fg: var(--semantic-foreground-neutral-primary);
+  --fg-2: var(--semantic-foreground-neutral-secondary);
+  --fg-3: var(--semantic-foreground-neutral-tertiary);
+  --bg: var(--semantic-background-neutral-primary);
+  --bg-2: var(--semantic-background-neutral-secondary);
+  --line: var(--semantic-line-neutral-secondary);
+  --line-soft: var(--semantic-line-neutral-tertiary);
+  --brand: var(--semantic-surface-brand-primary);
+  --brand-strong: var(--semantic-surface-brand-strong);
+  --brand-fg: var(--semantic-foreground-brand-primary);
+  --brand-subtle: var(--semantic-surface-brand-subtle);
+  --gutter: clamp(var(--spacing-20), 5vw, var(--spacing-40));
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: var(--typography-body1-fontSize); line-height: var(--typography-body1-lineHeight); letter-spacing: var(--typography-body1-letterSpacing); word-break: keep-all; }
+a { color: inherit; }
+.wrap { max-width: calc(1040px + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
+.mi { width: 20px; height: 20px; flex: none; fill: currentColor; }
+
+/* 글자 단계 */
+.t-title1 { font-size: var(--typography-title1-fontSize); line-height: var(--typography-title1-lineHeight); letter-spacing: var(--typography-title1-letterSpacing); font-weight: var(--typography-title1-weight-bold); }
+.t-title3 { font-size: var(--typography-title3-fontSize); line-height: var(--typography-title3-lineHeight); letter-spacing: var(--typography-title3-letterSpacing); font-weight: var(--typography-title3-weight-bold); }
+.t-headline1 { font-size: var(--typography-headline1-fontSize); line-height: var(--typography-headline1-lineHeight); letter-spacing: var(--typography-headline1-letterSpacing); font-weight: var(--typography-headline1-weight-bold); }
+.t-body2 { font-size: var(--typography-body2-fontSize); line-height: var(--typography-body2-lineHeight); letter-spacing: var(--typography-body2-letterSpacing); }
+.t-label1 { font-size: var(--typography-label1-fontSize); line-height: var(--typography-label1-lineHeight); letter-spacing: var(--typography-label1-letterSpacing); }
+.t-caption1 { font-size: var(--typography-caption1-fontSize); line-height: var(--typography-caption1-lineHeight); letter-spacing: var(--typography-caption1-letterSpacing); }
+
+/* 상단 메뉴 */
+.nav { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line-soft); }
+.nav .wrap { display: flex; align-items: center; gap: var(--spacing-24); height: 60px; }
+.brand { display: flex; align-items: center; gap: var(--spacing-8); text-decoration: none; font-weight: 700; font-size: var(--typography-headline1-fontSize); }
+.brand svg { width: 28px; height: 28px; }
+.nav ul { display: flex; gap: var(--spacing-4); margin: 0; padding: 0; list-style: none; overflow-x: auto; scrollbar-width: none; }
+.nav ul::-webkit-scrollbar { display: none; }
+.nav li a { display: flex; align-items: center; height: 60px; padding: 0 var(--spacing-10); color: var(--fg-2); text-decoration: none; font-weight: 500; white-space: nowrap; box-shadow: inset 0 -2px 0 transparent; transition: color .15s, box-shadow .15s; }
+.nav li a:hover { color: var(--fg); }
+.nav li a[aria-current="page"] { color: var(--fg); font-weight: 600; box-shadow: inset 0 -2px 0 var(--fg); }
+.nav .switch { margin-left: auto; white-space: nowrap; color: var(--fg-3); text-decoration: none; }
+.nav .switch:hover { color: var(--brand-fg); }
+
+/* 포커스 */
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: var(--radius-8); }
+
+/* 버튼 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-6); height: 48px; padding: 0 var(--spacing-20); border-radius: var(--radius-12); font-weight: 600; text-decoration: none; transition: background .15s, transform .1s; }
+.btn:active { transform: scale(.98); }
+.btn-primary { background: var(--brand); color: var(--semantic-static-white, #fff); }
+.btn-primary:hover { background: var(--brand-strong); }
+.btn-outline { border: 1px solid var(--line); color: var(--fg); }
+.btn-outline:hover { background: var(--semantic-surface-neutral-tertiary); }
+
+/* 히어로: 왼쪽 문구, 오른쪽 준비 단계 카드 */
+.hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--spacing-40); align-items: center; padding: var(--spacing-64) 0 var(--spacing-56); }
+.hero h1 { margin: 0 0 var(--spacing-12); }
+.hero p { margin: 0 0 var(--spacing-32); color: var(--fg-2); }
+.hero .actions { display: flex; flex-wrap: wrap; gap: var(--spacing-8); }
+.progress-card { padding: var(--spacing-24); border: 1px solid var(--line-soft); border-radius: var(--radius-20); background: var(--semantic-surface-elevated-primary); box-shadow: var(--semantic-elevation-shadow-normal-medium); }
+.progress-card header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--spacing-12); }
+.progress-card header b { font-size: var(--typography-headline1-fontSize); }
+.bar { height: 8px; border-radius: var(--radius-full); background: var(--semantic-surface-neutral-secondary); overflow: hidden; margin-bottom: var(--spacing-20); }
+.bar i { display: block; width: 25%; height: 100%; border-radius: inherit; background: var(--brand); }
+.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--spacing-4); }
+.steps li { display: flex; align-items: center; gap: var(--spacing-12); padding: var(--spacing-10) var(--spacing-12); border-radius: var(--radius-12); }
+.steps .num { display: grid; place-items: center; width: 28px; height: 28px; border-radius: var(--radius-full); border: 1.5px solid var(--line); color: var(--fg-3); font-size: var(--typography-label1-fontSize); font-weight: 600; flex: none; }
+.steps .done { background: var(--brand-subtle); }
+.steps .done .num { border-color: var(--brand); background: var(--brand); color: #fff; }
+.steps .next .num { border-color: var(--brand); color: var(--brand-fg); }
+.steps .state { margin-left: auto; color: var(--fg-3); }
+.steps .done .state, .steps .next .state { color: var(--brand-fg); font-weight: 600; }
+
+/* 섹션 */
+.sec { padding: var(--spacing-40) 0; }
+.sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-20); }
+.sec-head h2 { margin: 0; }
+.more { display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--fg-3); text-decoration: none; }
+.more:hover { color: var(--fg); }
+.more .mi { width: 18px; height: 18px; }
+
+/* 직군 카드 */
+.roles { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-16); margin: 0; padding: 0; list-style: none; }
+.role { display: flex; flex-direction: column; height: 100%; padding: var(--spacing-20); border: 1px solid var(--line-soft); border-radius: var(--radius-16); text-decoration: none; transition: box-shadow .2s, border-color .2s, transform .2s; }
+.role:hover { border-color: var(--line); box-shadow: var(--semantic-elevation-shadow-normal-medium); transform: translateY(-2px); }
+.role .ico { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: var(--spacing-16); border-radius: var(--radius-12); }
+.role .ico .mi { width: 24px; height: 24px; }
+.role h3 { margin: 0 0 var(--spacing-4); }
+.role p { margin: 0 0 var(--spacing-16); color: var(--fg-2); }
+.role .go { margin-top: auto; display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--brand-fg); font-weight: 600; }
+.ico-dev { background: var(--semantic-surface-accent-violet); color: var(--semantic-foreground-accent-violet); }
+.ico-design { background: var(--semantic-surface-accent-pink); color: var(--semantic-foreground-accent-pink); }
+.ico-po { background: var(--semantic-surface-accent-cyan); color: var(--semantic-foreground-accent-cyan); }
+.ico-mkt { background: var(--semantic-surface-accent-lime); color: var(--semantic-foreground-accent-lime); }
+
+/* 공고 카드 */
+.jobs { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-16); margin: 0; padding: 0; list-style: none; }
+.job { display: flex; flex-direction: column; gap: var(--spacing-4); padding: var(--spacing-20); border: 1px solid var(--line-soft); border-radius: var(--radius-16); background: var(--semantic-surface-elevated-primary); }
+.job .top { display: flex; justify-content: space-between; align-items: center; color: var(--fg-3); }
+.dday { padding: var(--spacing-2) var(--spacing-8); border-radius: var(--radius-8); background: var(--semantic-surface-negative-primary); color: var(--semantic-foreground-negative-primary); font-weight: 600; }
+.job h3 { margin: 0 0 var(--spacing-8); }
+.chips { display: flex; flex-wrap: wrap; gap: var(--spacing-6); }
+.chip { padding: var(--spacing-2) var(--spacing-8); border-radius: var(--radius-8); background: var(--semantic-surface-neutral-secondary); color: var(--fg-2); }
+
+/* 자주 묻는 질문 */
+.faq { border-top: 1px solid var(--line-soft); }
+.faq details { border-bottom: 1px solid var(--line-soft); }
+.faq summary { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-16); padding: var(--spacing-20) var(--spacing-4); cursor: pointer; list-style: none; font-weight: 600; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary .mi { color: var(--fg-3); transition: rotate .25s; }
+.faq details[open] summary .mi { rotate: 180deg; }
+.faq .answer { overflow: hidden; }
+.faq .answer p { margin: 0; padding: 0 var(--spacing-4) var(--spacing-20); color: var(--fg-2); }
+
+/* 푸터 */
+.foot { margin-top: var(--spacing-40); padding: var(--spacing-32) 0 var(--spacing-48); background: var(--bg-2); color: var(--fg-3); }
+.foot .wrap { display: flex; justify-content: space-between; gap: var(--spacing-12); flex-wrap: wrap; }
+.foot b { color: var(--fg-2); }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding-top: var(--spacing-40); }
+  .roles { grid-template-columns: repeat(2, 1fr); }
+  .jobs { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .nav .wrap { gap: var(--spacing-12); }
+  .nav .switch, .brand b { display: none; }
+  .t-title1 { font-size: var(--typography-title2-fontSize); line-height: var(--typography-title2-lineHeight); }
+  .roles { gap: var(--spacing-12); }
+  .role { padding: var(--spacing-16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .role, .btn, .faq summary .mi, .nav li a { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="주 메뉴">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" stroke-width="3"/><path d="M27 13 22 22 13 27 18 18Z" fill="var(--brand)"/></svg>
+      <b>커리어 길잡이</b>
+    </a>
+    <ul>
+      <li><a href="./" aria-current="page">홈</a></li>
+      <li><a href="../roles/index.html">직무 사전</a></li>
+      <li><a href="../jobs/index.html">채용 공고</a></li>
+      <li><a href="../faq/index.html">자주 묻는 질문</a></li>
+      <li><a href="../interview/index.html">1분 자기소개</a></li>
+    </ul>
+    <a class="switch t-label1" href="../index.html">종이 버전(A안) 보기</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="hero-title">
+    <div>
+      <h1 id="hero-title" class="t-title1">나의 첫 직무,<br>여기서부터 그려가요</h1>
+      <p>직무 탐색부터 첫 지원까지, 나만의 길을 차근차근.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="../roles/index.html">직무 사전 보기</a>
+        <a class="btn btn-outline" href="../jobs/index.html">채용 공고 보기</a>
+      </div>
+    </div>
+
+    <section class="progress-card" aria-labelledby="progress-title">
+      <header><b id="progress-title">취업 준비 4단계</b><span class="t-label1" style="color:var(--fg-3)">1 / 4 완료</span></header>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="1" aria-label="준비 단계 진행"><i></i></div>
+      <ol class="steps">
+        <li class="done"><span class="num"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span>직무 알아보기</span><span class="state t-label1">완료</span></li>
+        <li class="next"><span class="num">2</span><span>공고 살펴보기</span><span class="state t-label1">다음 단계</span></li>
+        <li><span class="num">3</span><span>서류 준비</span></li>
+        <li><span class="num">4</span><span>지원하기</span></li>
+      </ol>
+    </section>
+  </section>
+
+  <section class="sec" aria-labelledby="roles-title">
+    <div class="sec-head"><h2 id="roles-title" class="t-title3">어떤 길로 가 볼까요?</h2></div>
+    <ul class="roles">
+      <li><a class="role" href="../roles/index.html#dev"><span class="ico ico-dev"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg></span><h3 class="t-headline1">개발</h3><p class="t-body2">코드로 문제를 해결해요</p><span class="go t-label1">직무 보기<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></span></a></li>
+      <li><a class="role" href="../roles/index.html#design"><span class="ico ico-design"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></span><h3 class="t-headline1">디자인</h3><p class="t-body2">더 나은 경험을 만들어요</p><span class="go t-label1">직무 보기<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></span></a></li>
+      <li><a class="role" href="../roles/index.html#po"><span class="ico ico-po"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg></span><h3 class="t-headline1">PO</h3><p class="t-body2">제품의 방향을 그려요</p><span class="go t-label1">직무 보기<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></span></a></li>
+      <li><a class="role" href="../roles/index.html#marketing"><span class="ico ico-mkt"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z"/></svg></span><h3 class="t-headline1">마케팅</h3><p class="t-body2">가치를 사람에게 전해요</p><span class="go t-label1">직무 보기<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></span></a></li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="jobs-title">
+    <div class="sec-head"><h2 id="jobs-title" class="t-title3">마감 임박 채용 공고</h2><a class="more t-label1" href="../jobs/index.html">전체 보기<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a></div>
+    <!-- 홈(A안)과 같은 가상 공고 3개 -->
+    <ul class="jobs">
+      <li class="job"><div class="top t-caption1"><span>모눈랩</span><span class="dday t-caption1">D-7</span></div><h3 class="t-headline1">프론트엔드 개발자</h3><div class="chips t-caption1"><span class="chip">개발</span><span class="chip">신입</span></div></li>
+      <li class="job"><div class="top t-caption1"><span>여백스튜디오</span><span class="dday t-caption1">D-5</span></div><h3 class="t-headline1">주니어 프로덕트 디자이너</h3><div class="chips t-caption1"><span class="chip">디자인</span><span class="chip">신입</span></div></li>
+      <li class="job"><div class="top t-caption1"><span>다음페이지</span><span class="dday t-caption1">D-3</span></div><h3 class="t-headline1">콘텐츠 마케터</h3><div class="chips t-caption1"><span class="chip">마케팅</span><span class="chip">신입·경력</span></div></li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="faq-title">
+    <div class="sec-head"><h2 id="faq-title" class="t-title3">자주 묻는 질문</h2><a class="more t-label1" href="../faq/index.html">질문 더 보기<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a></div>
+    <div class="faq">
+      <details><summary>희망 직무를 아직 정하지 못했어요.<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></summary><div class="answer"><p>괜찮아요. 좋아했던 일과 잘했던 경험부터 적어 보고, 직무 사전에서 비슷한 일을 찾아봐요.</p></div></details>
+      <details><summary>관련 경험이 없어도 지원할 수 있나요?<svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></summary><div class="answer"><p>네. 작은 개인 프로젝트나 수업 과제도 경험이 돼요. 무엇을 배웠는지 한 줄로 정리해 보세요.</p></div></details>
+    </div>
+  </section>
+</main>
+
+<footer class="foot t-caption1">
+  <div class="wrap">
+    <span><b>커리어 길잡이</b> B안 · 원티드 디자인 시스템 Montage(MIT)의 디자인 토큰을 사용했어요.</span>
+    <span>원티드와 관련 없는 실습 사이트예요. 공고와 회사 이름은 가상 데이터예요.</span>
+  </div>
+</footer>
+
+<script>
+  // 자주 묻는 질문: 부드럽게 펼치고 접어요 (움직임 줄이기 설정이면 기본 동작)
+  (function () {
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    document.querySelectorAll('.faq details').forEach(function (el) {
+      var summary = el.querySelector('summary'), box = el.querySelector('.answer'), anim = null;
+      summary.addEventListener('click', function (e) {
+        if (reduce.matches || !el.animate) return;
+        e.preventDefault();
+        var from = el.open ? box.getBoundingClientRect().height : 0;
+        var opening = !el.open || (anim && anim.closing);
+        if (anim) anim.cancel();
+        if (opening) el.open = true;
+        anim = box.animate({ height: [from + 'px', (opening ? box.scrollHeight : 0) + 'px'] }, { duration: 260, easing: 'cubic-bezier(.3, .7, .3, 1)' });
+        anim.closing = !opening;
+        anim.onfinish = function () { anim = null; if (!opening) el.open = false; };
+      });
+    });
+  })();
+</script>
+</body>
+</html>
