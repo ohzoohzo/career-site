@@ -112,7 +112,8 @@ a { color: inherit; }
 .map .pencil { animation-delay: 2.7s; }
 @media (prefers-reduced-motion: reduce) {
   .map .route, .map .pins li, .map .flag, .map .pencil, .js .plant-pin.is-planted { animation: none; }
-  .btn, .tickets li, .folder .paper, .folder .front p { transition: none; }
+  .btn, .tickets li, .folder .paper, .folder .front p, .notes summary::after { transition: none; }
+  .notes details.is-opening p { animation: none; }
 }
 
 /* 첫 장면 마지막: '어떤 길로 가 볼까요?' 핀이 꽂혀요 (화면 밖이면 처음 보일 때 한 번) */
@@ -175,17 +176,21 @@ a { color: inherit; }
 .dday { padding: 2px 10px; border: 3px solid var(--red); border-radius: 4px; color: var(--red); font-weight: 700; font-size: 18px; transform: rotate(-6deg); opacity: .9; -webkit-mask: var(--ink-mask); mask: var(--ink-mask); }
 
 /* 자주 묻는 질문 메모지 */
-.notes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.notes { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; gap: 24px; }
 .notes details { position: relative; padding: 20px 20px 16px; }
-.notes details::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(transparent 80%, rgba(255, 255, 255, .55) 81%, rgba(120, 90, 20, .07) 82%, transparent 83.5%), var(--grain), linear-gradient(170deg, var(--note), #F6E07E); border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px; box-shadow: inset 0 0 16px rgba(150, 110, 20, .16); filter: url(#worn) var(--outline) drop-shadow(4px 4px 0 var(--shade)); }
+.notes .answer { overflow: hidden; }
+.notes details::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--grain), linear-gradient(170deg, var(--note), #F6E07E); border-radius: 2px 2px 14px 2px / 2px 2px 6px 2px; box-shadow: inset 0 0 16px rgba(150, 110, 20, .16); filter: url(#worn) var(--outline) drop-shadow(4px 4px 0 var(--shade)); }
 .notes details::before { content: ""; position: absolute; left: 50%; top: -9px; width: 72px; height: 20px; margin-left: -36px; background: var(--tape); border: 1.5px solid var(--line-ink); box-shadow: var(--shadow-1); transform: rotate(-3deg); }
 .notes details:nth-child(1) { transform: rotate(-.6deg); }
 .notes details:nth-child(2) { transform: rotate(.6deg); }
 .notes summary { cursor: pointer; font-weight: 500; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
-.notes summary::after { content: "+"; font-size: 20px; line-height: 1; }
-.notes details[open] summary::after { content: "−"; }
+.notes summary::after { content: "+"; font-size: 22px; line-height: 1; transition: rotate .3s ease; }
+.notes details[open]:not(.is-closing) summary::after { rotate: 45deg; }
 .notes summary::-webkit-details-marker { display: none; }
+.notes summary:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
 .notes p { margin: 10px 0 0; color: var(--ink-2); font-size: 15px; }
+.notes details.is-opening p { animation: note-text .3s ease .08s both; }
+@keyframes note-text { from { opacity: 0; translate: 0 -6px; } to { opacity: 1; translate: 0 0; } }
 
 .site-foot { padding-bottom: 28px; font-size: 14px; color: var(--ink-2); }
 .site-foot > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 18px; border-top: 1px solid var(--line); }
@@ -284,8 +289,8 @@ a { color: inherit; }
   <section class="sec" aria-labelledby="faq-title">
     <div class="sec-head"><h2 id="faq-title"><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>자주 묻는 질문</h2><a class="more" href="faq/index.html">질문 더 보기</a></div>
     <div class="notes">
-      <details><summary>희망 직무를 아직 정하지 못했어요.</summary><p>괜찮아요. 좋아했던 일과 잘했던 경험부터 적어 보고, 직무 사전에서 비슷한 일을 찾아봐요.</p></details>
-      <details><summary>관련 경험이 없어도 지원할 수 있나요?</summary><p>네. 작은 개인 프로젝트나 수업 과제도 경험이 돼요. 무엇을 배웠는지 한 줄로 정리해 보세요.</p></details>
+      <details><summary>희망 직무를 아직 정하지 못했어요.</summary><div class="answer"><p>괜찮아요. 좋아했던 일과 잘했던 경험부터 적어 보고, 직무 사전에서 비슷한 일을 찾아봐요.</p></div></details>
+      <details><summary>관련 경험이 없어도 지원할 수 있나요?</summary><div class="answer"><p>네. 작은 개인 프로젝트나 수업 과제도 경험이 돼요. 무엇을 배웠는지 한 줄로 정리해 보세요.</p></div></details>
     </div>
   </section>
 </main>
@@ -314,6 +319,36 @@ a { color: inherit; }
       if (entries.some(function (e) { return e.isIntersecting; })) { plant(); io.disconnect(); }
     }, { threshold: 1 });
     io.observe(pin);
+  })();
+</script>
+<script>
+  // 자주 묻는 질문: 메모지가 부드럽게 펼쳐지고 접혀요
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    document.querySelectorAll('.notes details').forEach(function (el) {
+      var summary = el.querySelector('summary');
+      var anim = null;
+      summary.addEventListener('click', function (e) {
+        if (reduce.matches || !el.animate) return; // 기본 동작 그대로
+        e.preventDefault();
+        var box = el.querySelector('.answer');
+        // 움직이는 중에 다시 누르면 지금 높이에서 이어서 움직여요
+        var from = el.open ? box.getBoundingClientRect().height : 0;
+        var opening = !el.open || (anim && anim.closing);
+        if (anim) anim.cancel();
+        if (opening) { el.open = true; el.classList.add('is-opening'); }
+        var to = opening ? box.scrollHeight : 0;
+        anim = box.animate({ height: [from + 'px', to + 'px'] }, { duration: 320, easing: 'cubic-bezier(.3, .7, .3, 1)' });
+        anim.closing = !opening;
+        el.classList.toggle('is-closing', !opening);
+        anim.onfinish = function () {
+          anim = null;
+          if (!opening) el.open = false;
+          el.classList.remove('is-opening', 'is-closing');
+        };
+        anim.oncancel = function () { el.classList.remove('is-opening'); };
+      });
+    });
   })();
 </script>
 </body>
