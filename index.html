@@ -131,9 +131,20 @@ a { color: inherit; }
 .map .flag { animation-delay: 2.45s; }
 .map .pencil { animation-delay: 2.7s; }
 @media (prefers-reduced-motion: reduce) {
-  .map .route, .map .pins li, .map .flag, .map .pencil, .logo .needle, .logo:hover .needle, .logo:focus-visible .needle { animation: none; }
+  .map .route, .map .pins li, .map .flag, .map .pencil, .logo .needle, .logo:hover .needle, .logo:focus-visible .needle, .js .plant-pin.is-planted { animation: none; }
   .btn, .tickets li, .folder .paper { transition: none; }
 }
+
+/* 첫 장면 마지막: '어떤 길로 가 볼까요?' 핀이 꽂혀요 (화면 밖이면 처음 보일 때 한 번) */
+@keyframes pin-plant {
+  0% { opacity: 0; translate: 0 -20px; scale: 1; }
+  55% { opacity: 1; translate: 0 2px; scale: 1; }
+  70% { translate: 0 0; scale: 1.18 .8; }
+  100% { translate: 0 0; scale: 1; }
+}
+.plant-pin { transform-box: fill-box; transform-origin: 50% 100%; }
+.js .plant-pin { opacity: 0; }
+.js .plant-pin.is-planted { opacity: 1; animation: pin-plant .55s cubic-bezier(.3, .7, .4, 1.2) var(--plant-delay, 0s) both; }
 
 /* 섹션 공통 */
 .sec { margin: 0 0 40px; }
@@ -259,7 +270,7 @@ a { color: inherit; }
   </section>
 
   <section class="sec" aria-labelledby="roles-title">
-    <div class="sec-head"><h2 id="roles-title"><svg class="mi red" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>어떤 길로 가 볼까요?</h2></div>
+    <div class="sec-head"><h2 id="roles-title"><svg class="mi red plant-pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>어떤 길로 가 볼까요?</h2></div>
     <ul class="folders">
       <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>개발</h3><p>코드로 문제를 해결해요</p><a href="roles/index.html#dev">이 길로 가기</a></div></li>
       <li class="folder"><span class="paper" aria-hidden="true"></span><div class="front"><h3><svg class="mi" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>디자인</h3><p>더 나은 경험을 만들어요</p><a href="roles/index.html#design">이 길로 가기</a></div></li>
@@ -294,5 +305,24 @@ a { color: inherit; }
   </div>
 </footer>
 
+<script>
+  // 스크립트가 돌 때만 핀을 숨겼다가 꽂아요 (스크립트가 없으면 처음부터 보여요)
+  document.documentElement.classList.add('js');
+  (function () {
+    var pin = document.querySelector('.plant-pin');
+    if (!pin) return;
+    var sceneEnd = 2900; // 길 그리기·깃발·연필이 끝나는 시점(ms)
+    var plant = function () {
+      var wait = Math.max(0, sceneEnd - performance.now());
+      pin.style.setProperty('--plant-delay', wait + 'ms');
+      pin.classList.add('is-planted');
+    };
+    if (!('IntersectionObserver' in window)) { plant(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      if (entries.some(function (e) { return e.isIntersecting; })) { plant(); io.disconnect(); }
+    }, { threshold: 1 });
+    io.observe(pin);
+  })();
+</script>
 </body>
 </html>
