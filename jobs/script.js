@@ -39,9 +39,8 @@ function renderGrid() {
     $("grid").innerHTML = '<li class="empty"><b>조건에 맞는 공고가 아직 없어요.</b>필터를 하나 풀어 보세요.</li>';
     return;
   }
-  $("grid").innerHTML = list.map(function (j, i) {
-    var deco = i % 3 === 2 ? '<span class="clip" aria-hidden="true"></span>' : '<span class="pin" aria-hidden="true"></span>';
-    return '<li><a class="note" href="' + esc(j.link) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(j.co) + ' ' + esc(j.title) + ' 공고 원문 (새 창)">' + deco +
+  $("grid").innerHTML = list.map(function (j) {
+    return '<li><a class="note" href="' + esc(j.link) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(j.co) + ' ' + esc(j.title) + ' 공고 원문 (새 창)">' +
       '<span class="co">' + esc(j.co) + '</span>' +
       '<span class="ti">' + esc(j.title) + '</span>' +
       '<span class="tags"><span class="tag ' + ROLE_CLASS[j.role] + '">' + j.role + '</span>' +

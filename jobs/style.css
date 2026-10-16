@@ -36,13 +36,33 @@ header.site .wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justi
 .brand svg { width: 38px; height: 38px; flex: none; }
 .brand b { display: block; font-size: 1.15rem; line-height: 1.2; }
 .brand small { color: var(--ink-soft); font-size: .72rem; }
-nav.tabs { display: flex; gap: 4px; }
+/* 메뉴 탭: 서류 폴더 모양 (home.png 느낌) */
+nav.tabs { position: relative; z-index: 0; display: flex; align-items: flex-end; gap: 6px; padding: 0 4px; }
 nav.tabs a {
-  text-decoration: none; font-size: .88rem; padding: 8px 14px 7px;
-  background: var(--paper-2); border: 1px solid var(--line); border-bottom: 0;
-  border-radius: 10px 10px 0 0; color: var(--ink-soft);
+  position: relative;
+  text-decoration: none; font-size: .9rem; font-weight: 700;
+  padding: 9px 22px 8px; min-width: 88px; text-align: center;
+  color: var(--navy); white-space: nowrap;
+  background: linear-gradient(var(--paper), var(--paper-2));
+  border: 1px solid var(--line); border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+  box-shadow: inset 0 1px 0 var(--paper), 0 -1px 3px var(--line);
 }
-nav.tabs a[aria-current="page"] { background: var(--paper); color: var(--ink); font-weight: 700; padding-top: 11px; box-shadow: 0 -3px 0 var(--kraft) inset; }
+nav.tabs a:hover { background: var(--paper); }
+/* 지금 보는 탭: 하얗고 높게, 아래 본문 종이와 이어지게 */
+nav.tabs a[aria-current="page"] {
+  background: var(--paper);
+  font-size: 1rem; padding-top: 13px; margin-bottom: -1px;
+  border-color: var(--kraft);
+}
+/* 탭 뒤로 살짝 보이는 노란 폴더 귀퉁이 */
+nav.tabs a[aria-current="page"]::after {
+  content: ""; position: absolute; z-index: -1;
+  top: -4px; right: -5px; width: 40%; height: 70%;
+  background: var(--kraft);
+  border: 1px solid var(--kraft-dark); border-bottom: 0; border-left: 0;
+  border-radius: 0 9px 0 0;
+}
 
 /* 제목 */
 .hero { padding: 26px 0 8px; }
@@ -73,10 +93,8 @@ a.note { text-decoration: none; color: inherit; }
 .board {
   background: var(--kraft); border: 10px solid var(--paper-2); outline: 1px solid var(--line);
   border-radius: 10px; padding: 18px 16px 22px; position: relative;
-  background-image:
-    radial-gradient(rgba(120,85,40,.22) 1.2px, transparent 1.6px),
-    radial-gradient(rgba(255,255,255,.18) 1px, transparent 1.4px);
-  background-size: 9px 9px, 13px 13px; background-position: 0 0, 4px 6px;
+  background-image: url("img/board-tile.jpg"); /* 코르크 질감을 타일처럼 반복 */
+  background-size: 360px auto; background-repeat: repeat;
   box-shadow: inset 0 2px 10px rgba(80,50,10,.25), 0 6px 14px rgba(20,40,75,.12);
 }
 .board-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
@@ -87,17 +105,16 @@ a.note { text-decoration: none; color: inherit; }
 
 .note {
   position: relative; display: block; width: 100%; text-align: left;
-  background: #fff; border: 0; border-radius: 2px; padding: 18px 16px 14px;
-  box-shadow: 0 2px 0 rgba(0,0,0,.05), 0 7px 12px rgba(60,35,5,.28);
-  min-height: 132px; transition: transform .18s, box-shadow .18s;
+  background: url("img/memo-cut.png") center / 100% 100% no-repeat; /* 찢긴 메모지 이미지를 카드 크기에 맞춰 늘림 */
+  border: 0; padding: 40px 28px 30px 30px;
+  min-height: 170px; transition: transform .18s, filter .18s;
+  filter: drop-shadow(0 4px 5px rgba(60,35,5,.3));
 }
-.note::after { /* 종이 가장자리 살짝 찢긴 느낌 */
-  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 6px;
-  background: radial-gradient(circle at 5px -1px, transparent 4px, #fff 4.5px) 0 0 / 10px 6px repeat-x;
-}
-.grid li:nth-child(odd) .note { transform: rotate(-.6deg); }
-.grid li:nth-child(even) .note { transform: rotate(.5deg); }
-.note:hover, .note[aria-pressed="true"] { transform: rotate(0) translateY(-3px); box-shadow: 0 2px 0 rgba(0,0,0,.05), 0 12px 18px rgba(60,35,5,.35); }
+.grid li:nth-child(4n+1) .note { transform: rotate(-1.4deg); }
+.grid li:nth-child(4n+2) .note { transform: rotate(.9deg); }
+.grid li:nth-child(4n+3) .note { transform: rotate(.4deg); }
+.grid li:nth-child(4n) .note { transform: rotate(-.8deg); }
+.note:hover, .note:focus-visible { transform: rotate(0) translateY(-3px); filter: drop-shadow(0 10px 10px rgba(60,35,5,.38)); }
 .note[aria-pressed="true"] { outline: 3px solid var(--red); outline-offset: 2px; }
 .note .co { font-size: .9rem; color: var(--ink-soft); display: block; padding-right: 74px; }
 .note .ti { font-size: 1.15rem; font-weight: 800; display: block; margin: 1px 0 10px; padding-right: 74px; line-height: 1.3; letter-spacing: -.01em; }
@@ -109,16 +126,9 @@ a.note { text-decoration: none; color: inherit; }
 .tag.r-mkt { background: var(--mkt); color: var(--mkt-ink); }
 .tag.ai { background: var(--red-soft); color: var(--red); }
 
-/* 핀·클립 */
-.pin { position: absolute; top: -10px; left: 14px; width: 18px; height: 18px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #ff8a96, var(--red) 55%, #8d1424); box-shadow: 3px 5px 5px rgba(0,0,0,.3); }
-.pin::after { content: ""; position: absolute; left: 7px; top: 15px; width: 3px; height: 9px; background: #8d8d95; border-radius: 0 0 2px 2px; transform: rotate(-20deg); }
-.clip { position: absolute; top: -14px; left: 10px; width: 16px; height: 36px; border: 2.5px solid #8e939e; border-radius: 9px; }
-.clip::after { content: ""; position: absolute; left: 3px; top: 8px; width: 6px; height: 24px; border: 2.5px solid #8e939e; border-radius: 6px; border-top-color: transparent; }
-
 /* D-day 도장 */
 .stamp {
-  position: absolute; right: 12px; bottom: 12px; transform: rotate(-7deg);
+  position: absolute; right: 22px; bottom: 24px; transform: rotate(-7deg);
   font-weight: 900; font-size: 1.35rem; letter-spacing: .02em; color: var(--red);
   border: 2.5px solid var(--red); border-radius: 5px; padding: 0 9px; background: rgba(200,40,60,.04);
   font-family: "Arial Black", var(--font);
@@ -140,7 +150,7 @@ a.note { text-decoration: none; color: inherit; }
 .detail .note-txt { margin: 12px 0 0; font-size: .82rem; color: var(--ink-soft); border-top: 1px dashed var(--line); padding-top: 8px; }
 
 /* 스프링 노트 달력 */
-aside.cal { position: relative; background: var(--paper); border: 1px solid var(--line); border-radius: 6px 6px 12px 12px; padding: 40px 18px 20px; margin-top: 18px;
+aside.cal { position: relative; background: var(--paper) url("img/memoskin.jpg") center / cover no-repeat; border: 1px solid var(--line); border-radius: 6px 6px 12px 12px; padding: 40px 18px 20px; margin-top: 18px;
   box-shadow: 0 6px 16px rgba(20,40,75,.14); }
 aside.cal .rings { position: absolute; top: -18px; left: 20px; right: 20px; display: flex; justify-content: space-between; }
 aside.cal .rings i { width: 9px; height: 34px; border-radius: 5px; background: linear-gradient(90deg, #111827, #4b5563 60%, #111827); box-shadow: 1px 3px 3px rgba(0,0,0,.3); }
@@ -171,9 +181,11 @@ footer.site b { color: var(--ink); }
 @media (max-width: 420px) {
   .chip { padding: 6px 13px; }
   .filters .sep { display: none; }
-  nav.tabs a { padding: 8px 9px 7px; font-size: .8rem; }
+  nav.tabs { padding: 0 4px 0 0; gap: 3px; }
+  nav.tabs a { padding: 8px 8px 7px; font-size: .78rem; min-width: 0; }
+  nav.tabs a[aria-current="page"] { padding-top: 11px; font-size: .84rem; }
   .note .co, .note .ti { padding-right: 0; }
-  .note { padding-bottom: 52px; }
+  .note { padding: 38px 22px 52px 24px; }
   .days td { height: 34px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
